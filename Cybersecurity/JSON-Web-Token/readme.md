@@ -1422,3 +1422,6 @@ localStorage   → ❌ never
 - 🔐 OAuth 2.0 (RFC 6749)
 - 👤 OpenID Connect Core 1.0
 - 🏛️ NIST SP 800-63B — Digital Identity Guidelines
+
+---
+*Maintained with curiosity by [ItsWanheda](https://github.com/ItsWanheda)*
