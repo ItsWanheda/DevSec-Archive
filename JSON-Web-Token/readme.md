@@ -1,31 +1,29 @@
 # JSON Web Token (JWT): The Complete Developer Guide
 > A comprehensive, production-grade guide to understanding, implementing, and securing JSON Web Tokens. From first principles to enterprise architecture.
 
-![Introduction](##-Introduction)
-![Authentication Basics](##-Authentication-Basics)
-![History of JWT](##-History-of-JWT)
-![JWT Structure](##-JWT-Structure)
-![JWT Claims](##-JWT-Claims)
-![JWT Signing Algorithms](##-JWT-Signing-Algorithms)
+![Introduction](#-Introduction)
+![Authentication Basics](#-Authentication-Basics)
+![History of JWT](#-History-of-JWT)
+![JWT Structure](#-JWT-Structure)
+![JWT Claims](#-JWT-Claims)
+![JWT Signing Algorithms](#-JWT-Signing-Algorithms)
 ![How JWT Authentication Works](##-How-JWT-Authentication-Works)
-![Access Token](##-Access-Token)
-![Refresh Token](##-Refresh-Token)
-![Token Storage](##-Token-Storage)
-![Security Risks](##-Security-Risks)
-![Best Practices](##-Best-Practices)
-![Backend Implementation](##-backend-Implementation)
-![Frontend Implementation](##-Frontend-Implementation)
-![Building Authentication](##-Building-Authentication)
-![Common Mistakes](##-Common-Mistakes)
-![Frequently Asked Questions](##-Frequently-Asked-Questions)
-![Interview Questions](##-Interview-Questions)
-![Cheat Sheet](##-Cheat-Sheet)
-![Resources](##-Resources)
+![Access Token](#-Access-Token)
+![Refresh Token](#-Refresh-Token)
+![Token Storage](#-Token-Storage)
+![Security Risks](#-Security-Risks)
+![Best Practices](#-Best-Practices)
+![Building Authentication](#-Building-Authentication)
+![Common Mistakes](#-Common-Mistakes)
+![Frequently Asked Questions](#-Frequently-Asked-Questions)
+![Interview Questions](#-Interview-Questions)
+![Cheat Sheet](#-Cheat-Sheet)
+![Resources](#-Resources)
 
 ---
 
-## Introduction
-### **What is JWT?**
+# Introduction
+## **What is JWT?**
 **JSON Web Token (JWT)** is a compact, URL-safe, self-contained token format defined by RFC 7519. It is used to securely transmit information between two parties as a JSON object. The information inside a JWT is digitally signed using a secret (HMAC) or a public/private key pair (RSA, ECDSA, EdDSA), which guarantees that the data has not been tampered with and that the sender is who they claim to be.
 
 A **JWT** looks like this:
@@ -35,7 +33,7 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4
 Three base64url-encoded strings separated by two dots. Simple on the outside, powerful on the inside.
 > 💡 **Note**: JWT is a token format, not an authentication protocol. It is the container used inside many authentication and authorization systems. 
 
-### **Why JWT Was Created**
+## **Why JWT Was Created**
 Before JWT, authentication and information exchange between systems relied on:
 * **Custom token formats** that worked only within a specific product
 * **SAML (Security Assertion Markup Language)** which is powerful but XML-heavy and complex
@@ -49,7 +47,7 @@ The IETF needed a lightweight, language-agnostic, JSON-based standard that could
 4. Be verified without a database lookup (stateless)
 JWT was the answer.
 
-### **Problems JWT Solves**
+## **Problems JWT Solves**
 | **Problem** | **How JWT Solves It** |
 |:------------|:----------------------|
 | **Distributed authentication across microservices** | Tokens are self-contained and can be verified by any service using the same secret key (HS256) or a public key (RS256/ES256), eliminating the need for centralized session storage. |
@@ -59,7 +57,7 @@ JWT was the answer.
 | **API authorization** | Each request includes a signed JWT containing user roles, permissions, and scopes, allowing APIs to authorize access without maintaining server-side sessions. |
 | **Offline verification** | Since JWTs are digitally signed, their integrity and authenticity can be verified locally without requiring a database lookup or communication with the authentication server. |
 
-### **When NOT to Use JWT**
+## **When NOT to Use JWT**
 JWT is **not** a silver bullet. Avoid it when:
 * ❌ **You need immediate revocation at scale**. JWTs are stateless — revoking one mid-lifetime requires blocklists, defeating the purpose.
 * ❌ **Your system is monolithic with a single backend**. Traditional server-side sessions are simpler and safer.
@@ -75,16 +73,16 @@ JWT is **not** a silver bullet. Avoid it when:
 
 ---
 
-## Authentication Basics
+# Authentication Basics
 Before diving into JWT, you need a solid understanding of the concepts around it.
 
-### Authentication
+## Authentication
 **Authentication** is the process of proving who you are. When you log in with a username and password, you are authenticating.
 <p align="center">
   <img src="./src/image/Authentication.svg" alt="Authentication diagram" width="500">
 </p>
 
-### Authorization
+## Authorization
 **Authorization** is the process of determining what you are allowed to do. After authentication, the system decides which resources you can access.
 <p align="center">
   <img src="./src/image/Authorization.svg" alt="Authorization diagram" width="500">
@@ -92,10 +90,10 @@ Before diving into JWT, you need a solid understanding of the concepts around it
 
 > 💡 Analogy: Authentication is showing your ID at the airport. Authorization is the boarding pass telling you which gate you can enter. 
 
-### Identity
+## Identity
 **Identity** is the set of attributes that uniquely describes a user — username, email, ID, roles, etc.
 
-### Sessions
+## Sessions
 A **session** is a server-side mechanism where the server stores user state (e.g., "user 42 is logged in") and gives the client a session ID (often in a cookie). The server then looks up the session on every request.
 
 <p align="center">
@@ -112,7 +110,7 @@ A **session** is a server-side mechanism where the server stores user state (e.g
 | **Max-Age / Expires** | Defines how long the cookie remains valid before it is automatically deleted by the browser. |
 | **Path / Domain** | Restricts where the cookie is sent, allowing developers to limit it to specific paths or domains for better security and scope control. |
 
-### Stateless Authentication
+## Stateless Authentication
 In **stateless authentication**, the server stores no session data. Every request carries everything the server needs to verify the user (typically a JWT).
 
 <p align="center">
@@ -128,14 +126,14 @@ In **stateless authentication**, the server stores no session data. Every reques
 
 ---
 
-## History of JWT
-### RFC 7519
+# History of JWT
+## RFC 7519
 JWT was formalized in RFC 7519, published in May 2015 by the IETF. The RFC defines:
 - The token structure
 - Standard claims ( iss, sub, aud, exp, nbf, iat, jti)
 - Validation rules
 - Use cases
-### JOSE
+## JOSE
 JOSE stands for **Javascript Object Signing and Encryption**. It is the family of specifications that defines how JSON-based security tokens work.
 
 | **Specification** | **Purpose** |
@@ -146,7 +144,7 @@ JOSE stands for **Javascript Object Signing and Encryption**. It is the family o
 | **JWA (RFC 7518)** | **JSON Web Algorithms** — Defines the registry of cryptographic algorithms used for signing, encryption, hashing, and key management. |
 | **JWT (RFC 7519)** | **JSON Web Token** — Defines the compact, URL-safe token format used to securely transmit claims between parties. |
 
-### Why JWT Became Popular
+## Why JWT Became Popular
 1. **Microservices boom** — distributed services needed a way to trust each other without central session storage.
 2. **Mobile revolution** — native apps need header-based auth, not browser cookies.
 3. **OAuth 2.0 and OIDC adoption** — both rely on JWT for ID tokens and access tokens.
@@ -158,14 +156,14 @@ JOSE stands for **Javascript Object Signing and Encryption**. It is the family o
 
 ---
 
-## JWT Structure
+# JWT Structure
 A JWT consists of three parts, separated by dots:
 ```bash
 HEADER.PAYLOAD.SIGNATURE
 ```
 Each part is **Base64URL** encoded (not Base64, not encrypted).
 
-### The Three Parts Explained
+## The Three Parts Explained
 1. **Header**
 The header contains metadata about the token — specifically, the signing algorithm and the token type.
 
@@ -207,7 +205,7 @@ Result:
 SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
 ```
 
-### Base64URL Encoding
+## Base64URL Encoding
 Standard Base64 uses +, /, and = — characters that are problematic in URLs and filenames. Base64URL replaces them:
 
 | **Feature** | **Base64** | **Base64URL** |
@@ -221,12 +219,12 @@ Standard Base64 uses +, /, and = — characters that are problematic in URLs and
 
 > 💡 **Why**? JWTs are designed to be used in URLs, HTTP headers, and cookies. Padding characters ( =) can be misinterpreted, and +/ / have special meaning in URLs. 
 
-### Why JWT Is NOT Encrypted
+## Why JWT Is NOT Encrypted
 A signed JWT only guarantees **integrity and authenticity** — that the token was created by a trusted party and hasn't been tampered with. **Anyone** who has the token can decode the payload and read it.
 > ⚠️ **Warning**: Never put sensitive data (passwords, credit cards, SSNs, PII) in a JWT payload. It is base64, not encryption.
 If you need confidentiality, use **JWE** (JSON Web Encryption) instead, or keep the data server-side and store only the ID in the JWT.
 
-### Decode a Real JWT Manually
+## Decode a Real JWT Manually
 Take this token:
 ```bash
 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
@@ -256,7 +254,7 @@ echo "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9" | tr '_-' '/+' | base64 -d
 
 ---
 
-## JWT Claims
+# JWT Claims
 Claims are the key-value pairs inside the payload. There are three categories.
 
 1. **Registered Claims (Standard)**
@@ -314,10 +312,10 @@ Custom claims agreed upon between the issuer and the consumer. Used internally.
 
 ---
 
-## JWT Signing Algorithms
+# JWT Signing Algorithms
 The algorithm is declared in the header's alg field. JWT supports three families.
 
-### HMAC-based (Symmetric)
+## HMAC-based (Symmetric)
 Same secret signs and verifies. Best for single-service systems where the same service signs and verifies tokens.
 
 | Algorithm | Hash | Output bits |
@@ -338,7 +336,7 @@ const token = jwt.sign({ sub: '42' }, 'my-secret', { algorithm: 'HS256' });
 * Secret must be shared with every verifier
 * If the secret leaks, attackers can sign any token
 
-### RSA-based (Asymmetric)
+## RSA-based (Asymmetric)
 Private key signs, public key verifies. Best for **multi-service** systems.
 
 | Algorithm | Hash |
@@ -367,7 +365,7 @@ const payload = jwt.verify(token, publicKey);
 * Slower than HMAC
 * CPU-intensive for very high QPS
 
-### ECDSA (Elliptic Curve)
+## ECDSA (Elliptic Curve)
 Asymmetric, but with smaller keys and faster verification than RSA.
 | Algorithm | Curve |
 |-----------|-------|
@@ -384,7 +382,7 @@ Asymmetric, but with smaller keys and faster verification than RSA.
 * Slightly more complex
 * Some legacy systems don't support it
 
-### EdDSA
+## EdDSA
 Modern elliptic-curve signature using **Ed25519** or **Ed448**.
 ```javascript
 const token = jwt.sign({ sub: '42' }, privateKey, { algorithm: 'EdDSA' });
@@ -422,22 +420,22 @@ const token = jwt.sign({ sub: '42' }, privateKey, { algorithm: 'EdDSA' });
 
 ---
 
-## How JWT Authentication Works
+# How JWT Authentication Works
 A complete authentication flow involves several endpoints. Let's walk through each one.
 
-### Registration
+## Registration
 The user creates an account.
 <p align="center">
   <img src="./src/image/Registration.svg" alt="Registration" width="500">
 </p>
 
-### Login
+## Login
 The user authenticates and receives tokens.
 <p align="center">
   <img src="./src/image/Login.svg" alt="Registration" width="500">
 </p>
 
-### Token Generation
+## Token Generation
 ```typescript
 function generateTokens(userId: string, role: string) {
   const accessToken = jwt.sign(
@@ -455,7 +453,7 @@ function generateTokens(userId: string, role: string) {
   return { accessToken, refreshToken };
 }
 ```
-### Verification
+## Verification
 When the client sends a request:
 ```typescript
 function authMiddleware(req, res, next) {
@@ -478,19 +476,19 @@ function authMiddleware(req, res, next) {
   }
 }
 ```
-### Protected Routes
+## Protected Routes
 ```typescript
 app.get('/api/profile', authMiddleware, (req, res) => {
   res.json({ userId: req.user.sub });
 });
 ```
-### Refresh Flow
+## Refresh Flow
 When the access token expires, the client uses the refresh token to get a new pair.
 <p align="center">
   <img src="./src/image/Refresh Flow.svg" alt="Registration" width="500">
 </p>
 
-### Logout
+## Logout
 
 ```typescript
 app.post('/auth/logout', authMiddleware, async (req, res) => {
@@ -507,16 +505,16 @@ app.post('/auth/logout', authMiddleware, async (req, res) => {
 
 ---
 
-## Access Token
+# Access Token
 **Definition**
 An **access token** is a short-lived credential that authorizes the client to access protected resources. It is sent with every API request.
 
-### Lifecycle
+## Lifecycle
 <p align="center">
   <img src="./src/image/Lifecycle.svg" alt="Registration" width="500">
 </p>
 
-### Expiration
+## Expiration
 Typical lifetimes:
 | App Type | Access Token Lifetime |
 |----------|----------------------|
@@ -526,14 +524,14 @@ Typical lifetimes:
 | Mobile app | 1 hour |
 > 💡 Tip: Shorter is safer. Use refresh tokens to avoid forcing the user to log in often.
 
-### Usage
+## Usage
 Sent in the Authorization header:
 ```bash
 GET /api/users/me
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 ```
 
-### Security
+## Security
 * Treat it like a password.
 * Never log it.
 * Never expose it in URLs.
@@ -546,16 +544,16 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 
 ---
 
-## Refresh Token
+# Refresh Token
 **Definition**
 A **refresh token** is a long-lived credential used to obtain new access tokens without forcing the user to re-authenticate.
 
-### Lifecycle
+## Lifecycle
 <p align="center">
   <img src="./src/image/Lifecycle-2.svg" alt="Registration" width="500">
 </p>
 
-### Rotation
+## Rotation
 **Token rotation** means issuing a new refresh token every time the old one is used. The old one is invalidated.
 ```typescript
 async function rotateRefreshToken(oldToken: string) {
@@ -577,13 +575,13 @@ async function rotateRefreshToken(oldToken: string) {
 }
 ```
 
-### Reuse Detection
+## Reuse Detection
 If an attacker steals a refresh token and uses it after the legitimate user has already rotated it, you detect this and revoke the entire family.
 <p align="center">
   <img src="./src/image/reuse detection.svg" alt="Registration" width="500">
 </p>
 
-### Revocation
+## Revocation
 Because refresh tokens are stored server-side, you can revoke them at any time:
 ```typescript
 await db.refreshToken.updateMany({
@@ -591,7 +589,7 @@ await db.refreshToken.updateMany({
   data: { revoked: true },
 });
 ```
-### Best Practices
+## Best Practices
 * ✅ Store refresh tokens in a database with jti, userId, used, revoked, expiresAt.
 * ✅ Use unique jti per refresh token.
 * ✅ Rotate on every use.
@@ -606,10 +604,10 @@ await db.refreshToken.updateMany({
 
 ---
 
-## Token Storage
+# Token Storage
 Where you store the JWT on the client is one of the most security-critical decisions you make.
 
-### The Options
+## The Options
 | Storage | XSS Safe | CSRF Safe | Lifetime | JS Accessible | Best For |
 |---------|----------|-----------|----------|---------------|----------|
 | `HttpOnly` Cookie | ✅ Yes | ⚠️ Needs `SameSite` | Configurable | ❌ No | Production web apps |
@@ -619,7 +617,7 @@ Where you store the JWT on the client is one of the most security-critical decis
 | Memory (JS variable) | ✅ Yes | ✅ Yes | Page lifetime | ✅ Yes | SPAs with silent refresh |
 | `IndexedDB` | ❌ No | ✅ Yes | Persistent | ✅ Yes | ❌ Avoid for tokens |
 
-### Comparison
+## Comparison
 HttpOnly **Cookies**
 ```typescript
 res.cookie('accessToken', token, {
@@ -646,7 +644,7 @@ sessionStorage
 * Same XSS risk as localStorage
 * Cleared when tab closes — slightly better
 
-### Memory
+## Memory
 ```javascript
 let accessToken = null;
 
@@ -664,7 +662,7 @@ IndexedDB
 * Same XSS risk as localStorage
 * More complex — no benefit over cookies for token storage
 
-### Modern Production Approach
+## Modern Production Approach
 The recommended approach for production web apps:
 1. **Access token**: stored in memory (JS variable) or HttpOnly cookie.
 2. **Refresh token**: stored in HttpOnly, Secure, SameSite=Strict cookie.
@@ -681,7 +679,7 @@ For SPAs:
 
 ---
 
-## Security Risks
+# Security Risks
 This section covers every major JWT attack and how to prevent it.
 
 1. **XSS (Cross-Site Scripting)**
@@ -812,7 +810,7 @@ Attack: Token leaked via Referer header when user clicks external link.
 
 ---
 
-## Best Practices 
+# Best Practices 
 **Transport & Cookies**
 * ✅ **Always HTTPS**. Use HSTS.
 * ✅ **HttpOnly + Secure + SameSite=Strict** for cookies.
@@ -907,13 +905,13 @@ function getKey(header, callback) {
 
 ---
 
-## Building Production Authentication
-### Microservices Architecture
+# Building Production Authentication
+## Microservices Architecture
 <p align="center">
   <img src="./src/image/Microservices Architecture.svg" alt="Registration" width="500">
 </p>
 
-### OAuth 2.0 & OpenID Connect
+## OAuth 2.0 & OpenID Connect
 JWT is the token format for:
 * **OAuth 2.0 access tokens** (sometimes)
 * **OIDC ID tokens** (always — by spec)
@@ -949,3 +947,478 @@ function can(role: Role, permission: string): boolean {
 * Combine with OAuth 2.0 / OIDC for standards-based SSO.
 * Centralize verification at the gateway.
 * Use RBAC + scopes for authorization.
+
+---
+
+# Common Mistakes
+The top 30 mistakes developers make with JWT.
+| # | Mistake | Why It's Wrong | Correct Approach |
+|---|---------|----------------|------------------|
+| 1 | Storing JWT in `localStorage` | XSS = total account takeover | Use `HttpOnly` cookies or memory |
+| 2 | Trusting `alg` from header | Algorithm confusion attack | Always specify allowed algorithms |
+| 3 | Using `alg: "none"` | Anyone can forge tokens | Reject `none` |
+| 4 | Weak secret (`"secret"`) | Brute force in seconds | Use ≥256-bit random secret |
+| 5 | Committing secrets to git | Public exposure | Use secret managers |
+| 6 | Not validating `exp` | Tokens never expire | Always verify expiration |
+| 7 | Not validating `iss` | Tokens from other issuers accepted | Validate issuer |
+| 8 | Not validating `aud` | Token reuse across services | Validate audience |
+| 9 | Long-lived access tokens | Long window for theft | 5–15 minutes |
+| 10 | No refresh token rotation | Stolen tokens valid for days | Rotate on every use |
+| 11 | No refresh token reuse detection | Stolen token works forever | Detect & revoke chain |
+| 12 | Putting PII in payload | Visible to anyone | Minimize payload |
+| 13 | Logging tokens | Token leaks in logs | Mask tokens |
+| 14 | Putting tokens in URLs | Logged in proxy, browser history | Use `Authorization` header |
+| 15 | Same secret for access & refresh | Both tokens compromised at once | Separate secrets |
+| 16 | No HTTPS | MITM attacks | Always TLS |
+| 17 | Forgetting `Secure` flag on cookies | Sent over HTTP | `Secure: true` |
+| 18 | No `SameSite` on cookies | CSRF | `SameSite=Strict` |
+| 19 | No rate limiting | Brute force | Rate-limit auth endpoints |
+| 20 | Using HS256 in multi-service | Secret leaks everywhere | Use RS256/ES256 |
+| 21 | Using RSA without `kid` | Can't rotate keys | Add `kid` header |
+| 22 | No clock skew tolerance | False rejections | Allow ~30 seconds |
+| 23 | JWT for session when DB session works | Over-engineering | Use the right tool |
+| 24 | Not revoking compromised tokens | Long-lived exposure | Add blocklist or rotation |
+| 25 | Storing tokens in cookies without `HttpOnly` | XSS exfiltration | `HttpOnly: true` |
+| 26 | Implementing JWT yourself | Bugs | Use a vetted library |
+| 27 | Using `bcrypt` with cost <12 | Fast brute force | bcrypt cost ≥12 or Argon2id |
+| 28 | Forgetting to invalidate refresh tokens on password change | Stolen tokens still work | Revoke all on password change |
+| 29 | No monitoring of auth events | Can't detect attacks | Log + alert |
+| 30 | Treating JWT as encrypted | PII leaks | Use JWE or server-side storage |
+
+**Key Takeaways**
+
+* Most JWT bugs are about handling, not the token itself.
+* Always specify algorithms in verify.
+* Use HttpOnly cookies and short lifetimes.
+
+---
+
+# Frequently Asked Questions
+> 50+ FAQs covering JWT fundamentals, implementation, security, and architecture.
+
+1. What does JWT stand for?
+JSON Web Token.
+
+2. Is JWT encrypted?
+No. By default it's signed and Base64URL-encoded. Use JWE for encryption.
+
+3. Can anyone read JWT payload?
+Yes — just Base64URL-decode it.
+
+4. What's the difference between JWT and OAuth?
+JWT is a token format. OAuth 2.0 is an authorization framework that often uses JWT.
+
+5. What's the difference between JWT and OIDC?
+OIDC is an identity layer on top of OAuth 2.0. It uses JWT for ID tokens.
+
+6. What is alg: "none"?
+A historical option that disabled signature verification. Modern libraries reject it.
+
+7. Should I use HS256 or RS256?
+HS256 for single-trust systems; RS256 for multi-service.
+
+8. What is kid in the header?
+Key ID — used to identify which key to use for verification (for rotation).
+
+9. Can I revoke a JWT?
+Not directly (stateless), but you can use a blocklist or short expiration.
+
+10. What is the jti claim?
+JWT ID — a unique identifier for the token, used for revocation and reuse detection.
+
+11. Where should I store JWT in the browser?
+HttpOnly cookies (best) or memory (acceptable for SPAs with silent refresh).
+
+12. What is CSRF?
+Cross-Site Request Forgery — attacker makes the browser send requests to your API.
+
+13. What is XSS?
+Cross-Site Scripting — attacker injects JS into your page.
+
+14. Should I put user roles in JWT?
+Yes, but always re-verify server-side. Roles in JWT are a hint, not authorization.
+
+15. How long should access tokens live?
+5–15 minutes for most apps. Shorter is safer.
+
+16. How long should refresh tokens live?
+7–30 days. With rotation, longer is acceptable.
+
+17. What is token rotation?
+Issuing a new refresh token every time the old one is used.
+
+18. What is reuse detection?
+Detecting when an already-used refresh token is used again — indicates theft.
+
+19. Can two services share the same JWT secret?
+Yes for HS256 (symmetric). For RS256, only the issuer needs the private key.
+
+20. What is Base64URL?
+A URL-safe variant of Base64 that replaces + with -, / with _, and removes padding.
+
+21. What is the difference between JWT and a session cookie?
+Sessions are server-side state with a session ID. JWT is stateless and self-contained.
+
+22. Can JWT work across domains?
+Yes, if CORS is configured properly and credentials are allowed.
+
+23. What's the size limit for JWT?
+There's no fixed limit, but keep it under a few KB. Cookies have a 4KB limit.
+
+24. Should I use JWT for CSRF protection?
+No. Use SameSite cookies and/or CSRF tokens.
+
+25. What's a JWE?
+JSON Web Encryption — encrypted JWT, used when payload must be confidential.
+
+26. Can I use JWT for password reset links?
+Yes, with single-use semantics and short expiration. Store jti to prevent reuse.
+
+27. Should I blacklist JWTs?
+Only for compromised tokens. Use a Redis blocklist with TTL.
+
+28. What is clock skew?
+Difference between server clocks. JWT libraries allow a tolerance (e.g., 30s).
+
+29. What is the JOSE family?
+JSON Object Signing and Encryption — JWS, JWE, JWK, JWA, JWT.
+
+30. What happens if my JWT secret leaks?
+Rotate immediately, invalidate all tokens, force users to re-login.
+
+31. Can I have multiple audiences?
+Yes. aud can be a string or array.
+
+32. What's the difference between sub and jti?
+sub identifies the user; jti identifies the specific token.
+
+33. How do I test JWT?
+Use jwt.io, library test helpers, and unit tests.
+
+34. What is nbf?
+Not Before — token is invalid before this time.
+
+35. What's the best JWT library for Node.js?
+jsonwebtoken is the de-facto standard. jose is more modern.
+
+36. What is the best JWT library for Python?
+PyJWT for simple cases; python-jose for full JOSE.
+
+37. What is the best JWT library for Java?
+Nimbus JOSE+JWT or jjwt.
+
+38. What is the best JWT library for Go?
+golang-jwt/jwt.
+
+39. What is the best JWT library for Ruby?
+jwt gem.
+
+40. What is the best JWT library for PHP?
+firebase/php-jwt or lcobucci/jwt.
+
+41. Can JWT be used for SSO?
+Yes — that's exactly what OIDC's ID token is.
+
+42. Can JWT be used for API authentication?
+Yes — that's the most common use.
+
+43. Can JWT be used for service-to-service auth?
+Yes — a service can sign tokens for another to verify.
+
+44. What's the most secure JWT setup?
+RS256/ES256, short access tokens, rotated refresh tokens, HttpOnly cookies, strong secrets, explicit algorithm validation.
+
+45. Should I sign cookies with JWT?
+You can, but session cookies or signed cookies (via frameworks) are usually simpler.
+
+46. Can JWT include binary data?
+Not directly. Encode binary as Base64 inside claims.
+
+47. What if I lose my JWT secret?
+You lose the ability to verify existing tokens. Rotate and force re-login.
+
+48. How do I migrate from sessions to JWT?
+Run both in parallel, migrate users gradually, then deprecate sessions.
+
+49. What's the difference between access token and ID token?
+Access token authorizes API access. ID token proves identity to the client app.
+
+50. Can I put a JWT inside another JWT?
+Yes — nested JWTs are allowed but rarely needed.
+
+51. Should JWT be logged?
+Never log the full token. Log only metadata (user ID, expiration).
+
+52. What's the difference between Authorization: Bearer and Authorization: Basic?
+Bearer means "here's a token." Basic means "here are base64-encoded credentials."
+
+53. Can I use JWT for file downloads?
+Use signed URLs (e.g., S3 pre-signed URLs) instead.
+
+54. How do I handle JWT in WebSockets?
+Send as a query param on connect, then verify; or use a short-lived ticket exchange.
+
+55. What is asymmetric key wrapping?
+Encrypting a JWT session key with the recipient's public key — used in JWE.
+
+---
+
+# Interview Questions
+> 50 interview questions with concise answers.
+
+1. What is JWT?
+A compact, URL-safe, signed token format defined by RFC 7519 for transmitting claims between parties.
+
+2. What are the three parts of a JWT?
+Header, payload, signature.
+
+3. How is a JWT signed?
+The header and payload are concatenated and signed with HMAC (HS256) or an asymmetric algorithm (RS256, ES256, EdDSA).
+
+4. What is the difference between signed and encrypted JWT?
+Signed (JWS) ensures integrity. Encrypted (JWE) ensures confidentiality.
+
+5. What is Base64URL?
+A URL-safe variant of Base64 that replaces + and / and removes = padding.
+
+6. What are standard claims?
+iss, sub, aud, exp, iat, nbf, jti.
+
+7. What is the aud claim?
+Audience — the intended recipient(s) of the token.
+
+8. What is the difference between authentication and authorization?
+AuthN verifies identity; AuthZ verifies permissions.
+
+9. What is algorithm confusion?
+An attack where the attacker changes alg in the header to a weaker algorithm to bypass verification.
+
+10. How do you prevent algorithm confusion?
+Always specify the allowed algorithms explicitly when verifying.
+
+11. What is HS256?
+HMAC with SHA-256, a symmetric signing algorithm.
+
+12. What is RS256?
+RSA Signature with SHA-256, an asymmetric algorithm.
+
+13. When should you use RS256 over HS256?
+When multiple services need to verify tokens but only one should issue them.
+
+14. What is a refresh token?
+A long-lived credential used to obtain new access tokens.
+
+15. What is token rotation?
+Issuing a new refresh token on every use, invalidating the old one.
+
+16. What is reuse detection?
+Detecting when an already-used refresh token is presented, indicating theft.
+
+17. Where should you store JWTs on the client?
+HttpOnly cookies (preferred) or memory (acceptable for SPAs).
+
+18. Why is localStorage a bad place for JWTs?
+Any XSS can exfiltrate the token.
+
+19. What is CSRF?
+Cross-Site Request Forgery — making the victim's browser send unwanted requests.
+
+20. How do you prevent CSRF?
+SameSite=Strict cookies, CSRF tokens, double-submit cookies.
+
+21. What is XSS?
+Cross-Site Scripting — injecting JS into a page.
+
+22. How do you prevent XSS?
+Sanitize input, use a strict CSP, escape output, store tokens in HttpOnly cookies.
+
+23. What is clockTolerance?
+A small leeway (e.g., 30 seconds) for clock differences when validating exp and nbf.
+
+24. What is the jti claim?
+JWT ID — a unique identifier used for revocation and reuse detection.
+
+25. What is iss?
+Issuer — the entity that issued the token.
+
+26. What is nbf?
+Not Before — the token is invalid before this time.
+
+27. What is exp?
+Expiration Time — when the token becomes invalid.
+
+28. What is the difference between access token and ID token?
+Access tokens authorize API access; ID tokens prove identity to the client.
+
+29. What is OAuth 2.0?
+An authorization framework that often uses JWTs as access tokens.
+
+30. What is OpenID Connect?
+An identity layer on top of OAuth 2.0 that uses JWT ID tokens.
+
+31. What is JWE?
+JSON Web Encryption — encrypted JWT for confidential payloads.
+
+32. What is JWS?
+JSON Web Signature — signed JWT.
+
+33. What is the JOSE family?
+JWS, JWE, JWK, JWA, JWT — the standards that govern JSON-based security tokens.
+
+34. What is a kid header?
+Key ID — identifies which key to use for verification.
+
+35. How do you rotate JWT secrets?
+Support both old and new keys for a grace period; sign new tokens with the new key.
+
+36. What is the recommended lifetime for access tokens?
+5–15 minutes.
+
+37. What is the recommended lifetime for refresh tokens?
+7–30 days, with rotation.
+
+38. What is a session token?
+A server-side credential that references stored session state.
+
+39. When should you NOT use JWT?
+For monolithic apps where server-side sessions are simpler and easier to revoke.
+
+40. What is RBAC?
+Role-Based Access Control — authorization based on user roles.
+
+41. What are scopes?
+Granular permissions included in a token (e.g., read:users).
+
+42. What is the best way to hash passwords?
+Argon2id, with bcrypt cost ≥12 as a fallback.
+
+43. What is the OWASP recommendation for JWT?
+Validate algorithm explicitly, use strong secrets, use short lifetimes, use HTTPS, store safely.
+
+44. What is iat?
+Issued At — when the token was created.
+
+45. What is sub?
+Subject — the user/entity the token represents.
+
+46. What is the difference between nbf and iat?
+iat records when the token was issued; nbf is when it becomes valid.
+
+47. Can a JWT be revoked?
+Not directly. Use a blocklist, short expiration, or refresh token revocation.
+
+48. What is a JWT blocklist?
+A server-side list of revoked jtis, often stored in Redis with TTL = remaining lifetime.
+
+49. What is silent refresh?
+Calling the refresh endpoint on app load to restore the session without user interaction.
+
+50. What is the difference between a stateless and stateful session?
+Stateless = JWT (no server-side session). Stateful = session ID + server-side store.
+
+51. What is the most common JWT vulnerability?
+Improper storage (e.g., localStorage) and algorithm confusion.
+
+52. How do you test JWT-based auth?
+Unit tests for token generation/verification, integration tests for flows, jwt.io for debugging.
+
+---
+
+# Cheat Sheet
+> A one-page reference for daily use.
+
+**Structure**
+```text
+HEADER.PAYLOAD.SIGNATURE   (Base64URL, signed)
+```
+**Standard Claims**
+```text
+iss   issuer
+sub   subject (user id)
+aud   audience
+exp   expiration (unix seconds)
+iat   issued at
+nbf   not before
+jti   unique token id
+```
+**Algorithms**
+```text
+HS256  HMAC-SHA256        symmetric, single service
+RS256  RSA-SHA256         asymmetric, multi-service
+ES256  ECDSA P-256        asymmetric, modern
+EdDSA  Ed25519            asymmetric, fastest
+```
+**Backend Snippet (Node.js)**
+```typescript
+jwt.sign(payload, secret, { algorithm: 'HS256', expiresIn: '15m' });
+jwt.verify(token, secret, { algorithms: ['HS256'] });
+```
+**Frontend Snippet (Axios)**
+```typescript
+axios.create({ withCredentials: true });
+api.interceptors.response.use(handle401);
+```
+**Storage**
+```text
+Access token   → HttpOnly cookie OR memory
+Refresh token  → HttpOnly + Secure + SameSite=Strict cookie
+localStorage   → ❌ never
+```
+**Best Practices**
+```text
+✓ HTTPS
+✓ Short access tokens (5–15m)
+✓ Rotate refresh tokens
+✓ Detect reuse
+✓ Validate iss/aud/exp
+✓ Strong secrets (≥256 bits)
+✓ Argon2id for passwords
+✓ Rate limit /auth/*
+✓ Log auth events
+✓ Rotate secrets
+```
+
+---
+
+# 📚 Resources
+
+## 📖 Official Standards (RFCs)
+
+- 📄 **RFC 7519** — JSON Web Token (JWT)
+- 📄 **RFC 7515** — JSON Web Signature (JWS)
+- 📄 **RFC 7516** — JSON Web Encryption (JWE)
+- 📄 **RFC 7517** — JSON Web Key (JWK)
+- 📄 **RFC 7518** — JSON Web Algorithms (JWA)
+
+---
+
+## 🔒 Security Guidance
+
+- 🛡️ OWASP JWT Cheat Sheet
+- 🛡️ OWASP API Security Top 10
+- 🛡️ Auth0 JWT Best Practices
+
+---
+
+## 🛠️ Developer Tools
+
+- 🔑 jwt.io — JWT Debugger
+- 🌐 MDN — Using Fetch API
+- 🍪 MDN — HTTP Cookies
+
+---
+
+## 📚 Library Documentation
+
+- 🟢 Node.js `jsonwebtoken`
+- 🚀 Express Documentation
+- 🗄️ Prisma Documentation
+- 🔐 `jose` — Modern JOSE Library
+
+---
+
+## 📘 Further Reading
+
+- 🔐 OAuth 2.0 (RFC 6749)
+- 👤 OpenID Connect Core 1.0
+- 🏛️ NIST SP 800-63B — Digital Identity Guidelines
