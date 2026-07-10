@@ -37,4 +37,4 @@ We follow the principles of **Responsible Disclosure**. We ask that you:
 The information and code provided in **DevSec-Archive** are for **educational and research purposes only**. The maintainers assume no liability for any misuse or damage caused by the use of this information.
 
 ---
-*Stay Secure, Stay Ethical.* 💻🛡️ 
+*Stay Secure, Stay Ethical.* 💻🛡️
