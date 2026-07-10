@@ -28,7 +28,7 @@ The goal of this repository is to bridge the gap between "making it work" and "m
 * Clean Architecture
 * Domain-Driven Design (DDD)
 
-🛡️ Cybersecurity
+🛡️ **Cybersecurity**
 * Web Application Security
 * Authentication Security
 * API Security
@@ -51,7 +51,7 @@ The goal of this repository is to bridge the gap between "making it work" and "m
 * Zero Trust Architecture
 * Threat Modeling
 
-🌐 Networking
+🌐 **Networking**
 * Computer Networks
 * OSI Model
 * TCP/IP
@@ -70,7 +70,7 @@ The goal of this repository is to bridge the gap between "making it work" and "m
 * SMTP
 * DNS Security
 
-💾 Databases
+💾 **Databases**
 * SQL
 * PostgreSQL
 * MySQL
@@ -83,7 +83,7 @@ The goal of this repository is to bridge the gap between "making it work" and "m
 * Query Optimization
 * Database Security
 
-🔐 Cryptography
+🔐 **Cryptography**
 * Hash Functions
 * Password Hashing
 * Digital Signatures
@@ -99,7 +99,7 @@ The goal of this repository is to bridge the gap between "making it work" and "m
 * JWK
 * TLS Handshake
 
-📚 Best Practices
+📚 **Best Practices**
 * Secure API Checklist
 * Backend Checklist
 * Security Checklist
@@ -109,7 +109,7 @@ The goal of this repository is to bridge the gap between "making it work" and "m
 * Error Handling
 * Code Review Guide
 
-📖 Reference
+📖 **Reference**
 * RFC Collection
 * Cheat Sheets
 * Books
