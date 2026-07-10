@@ -10,12 +10,113 @@
 The goal of this repository is to bridge the gap between "making it work" and "making it secure." Here, you will find resources on securing REST/GraphQL endpoints, implementing robust authentication flows, and hardening backend services against modern attack vectors.
 
 ## 📂 Repository Structure
+📖 **Backend Engineering**
+* HTTP Fundamentals
+* REST API Design
+* GraphQL
+* WebSockets
+* Authentication & Authorization
+* Session Management
+* API Versioning
+* Caching Strategies
+* File Uploads
+* Background Jobs
+* Event-Driven Architecture
+* Microservices
+* API Gateway
+* Backend Design Patterns
+* Clean Architecture
+* Domain-Driven Design (DDD)
 
-- `API-Security/` : Hardening endpoints, rate limiting, and OAuth/JWT best practices.
-- `Backend-Design/` : Architectural patterns, microservices security, and database hardening.
-- `Threat-Vectors/` : Analysis of modern exploits and how to mitigate them in your stack.
-- `Cryptography/` : Implementation of encryption, hashing, and TLS/SSL configurations.
-- `Resources/` : Curated list of books, whitepapers, and security tools.
+🛡️ Cybersecurity
+* Web Application Security
+* Authentication Security
+* API Security
+* OWASP Top 10
+* OWASP API Security Top 10
+* Cryptography
+* Password Security
+* JWT Security
+* OAuth 2.0 & OpenID Connect
+* Secure Coding Practices
+* Security Headers
+* CORS
+* CSRF
+* XSS
+* SQL Injection
+* SSRF
+* Command Injection
+* File Upload Security
+* Secrets Management
+* Zero Trust Architecture
+* Threat Modeling
+
+🌐 Networking
+* Computer Networks
+* OSI Model
+* TCP/IP
+* HTTP/HTTPS
+* DNS
+* TLS & SSL
+* Reverse Proxies
+* Load Balancers
+* Firewalls
+* VPN
+* CDN
+* WebSockets
+* HTTP/2 & HTTP/3
+* gRPC
+* SSH
+* SMTP
+* DNS Security
+
+💾 Databases
+* SQL
+* PostgreSQL
+* MySQL
+* MongoDB
+* Redis
+* Database Indexing
+* Transactions
+* ACID
+* Isolation Levels
+* Query Optimization
+* Database Security
+
+🔐 Cryptography
+* Hash Functions
+* Password Hashing
+* Digital Signatures
+* PKI
+* Certificates
+* AES
+* RSA
+* ECC
+* HMAC
+* JWT
+* JWS
+* JWE
+* JWK
+* TLS Handshake
+
+📚 Best Practices
+* Secure API Checklist
+* Backend Checklist
+* Security Checklist
+* Production Readiness
+* Performance Optimization
+* Logging Best Practices
+* Error Handling
+* Code Review Guide
+
+📖 Reference
+* RFC Collection
+* Cheat Sheets
+* Books
+* Whitepapers
+* Tools
+* Glossary
+* Interview Questions
 
 ## 🚀 Built for
 *   **Backend Engineers** who want to write hardened code.
