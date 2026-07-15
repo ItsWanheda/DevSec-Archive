@@ -7,41 +7,41 @@
 ---
 
 # 📑 Table of Contents
-* 🌟 Introduction
-🧱 Networking Fundamentals
-🗺️ Types of Networks
-🔗 Network Topologies
-🏛️ OSI Model — Layer by Layer
-🌍 TCP/IP Model
-🔌 Ethernet Deep Dive
-🆔 MAC Addressing
-🧮 IP Addressing
-🎯 Subnetting Masterclass
-🛣️ Routing
-🔀 Switching
-🖥️ Network Devices
-📡 DNS — Domain Name System
-🎁 DHCP
-📜 Network Protocols
-🚪 Ports Reference
-📶 Wireless Networking
-💡 Fiber Networking
-🧵 Cabling & Physical Media
-🛡️ Network Security
-☁️ Cloud Networking
-🐳 Containers & Kubernetes Networking
-🧠 SDN & SD-WAN
-📊 Network Monitoring
-🔬 Packet Analysis
-⚡ Network Performance
-🔧 Troubleshooting Toolkit
-🏢 Enterprise Architecture
-🎓 Certifications Roadmap
-💼 Interview Questions
-📋 Cheat Sheets
-✅ Best Practices
-⚠️ Common Mistakes
-📚 Resources & References
+[🌟 Introduction](#-introduction)
+[🧱 Networking Fundamentals](#-networking-fundamentals)
+[🗺️ Types of Networks](#️-types-of-networks)
+[🔗 Network Topologies](#-network-topologies)
+[🏛️ OSI Model — Layer by Layer](#️-osi-model--layer-by-layer)
+[🌍 TCP/IP Model](#-tcpip-model)
+[🔌 Ethernet Deep Dive](#-ethernet-deep-dive)
+[🆔 MAC Addressing](#-mac-addressing)
+[🧮 IP Addressing](#-ip-addressing)
+[🎯 Subnetting Masterclass](#-subnetting-masterclass)
+[🛣️ Routing](#️-routing)
+[🔀 Switching](#-switching)
+[🖥️ Network Devices](#network-devices)
+[📡 DNS — Domain Name System](#-dns--domain-name-system)
+[🎁 DHCP](#-dhcp-dynamic-host-configuration-protocol)
+[📜 Network Protocols](#-network-protocols)
+[🚪 Ports Reference](#-ports-reference)
+[📶 Wireless Networking](#-wireless-networking)
+[💡 Fiber Networking](#-fiber-networking)
+[🧵 Cabling & Physical Media](#-cabling--physical-media)
+[🛡️ Network Security](#️-network-security)
+[☁️ Cloud Networking](#️-cloud-networking)
+[🐳 Containers & Kubernetes Networking](#-containers--kubernetes-networking)
+[🧠 SDN & SD-WAN](#-sdn--sd-wan)
+[📊 Network Monitoring](#-network-monitoring)
+[🔬 Packet Analysis](#-packet-analysis)
+[⚡ Network Performance](#-network-performance)
+[🔧 Troubleshooting Toolkit](#-troubleshooting-toolkit)
+[🏢 Enterprise Architecture](#-enterprise-architecture)
+[🎓 Certifications Roadmap](#-certifications-roadmap)
+[💼 Interview Questions](#-interview-questions)
+[📋 Cheat Sheets](#-cheat-sheets)
+[✅ Best Practices](#-best-practices)
+[⚠️ Common Mistakes](#️-common-mistakes)
+[📚 Resources & References](#-resources--references)
 
 ---
 
