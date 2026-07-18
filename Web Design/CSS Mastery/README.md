@@ -48,8 +48,8 @@ Type/pseudo-element → 0,0,0,1
 ### Tricks & Gotchas
 * **important is debt**. Every use should come with a comment explaining why. If you need it, refactor your selectors instead.
 * **Margin collapse** is real. Vertical margins between block elements combine into the larger one — but only if there's no padding, border, or gap between them.
-* { margin: 0; padding: 0; } is outdated. Use a modern reset like Andy Bell's CSS reset instead.
-* **Universal selector** (*) **has zero specificity**, but it's still slow on huge DOMs. Target the elements you actually need.
+* `{ margin: 0; padding: 0; }` is outdated. Use a modern reset like Andy Bell's CSS reset instead.
+* **Universal selector** (`*`) **has zero specificity**, but it's still slow on huge DOMs. Target the elements you actually need.
 * **Selector lists don't add up** — the most specific selector in the list wins.
 
 ## 🛠️ Project Idea: Build a Pure-CSS Pricing Card
@@ -102,11 +102,11 @@ sticky — the modern hybrid (requires a scroll container with overflow)
 **Flexbox gap works in all modern browsers now**. Stop using margin hacks for spacing between flex items.
 
 flex: 
-**1 is shorthand for** (flex: 1 1 0%) — basis of 0% is critical for equal-width columns.
-(align-items: center) **won't vertically center text** if the parent has no height. Use min-height: `100dvh`.
-**Grid's** 1fr **≠** flex: 1. Grid distributes remaining space; flex uses flex-grow ratios.
+**1 is shorthand for** (`flex: 1 1 0%`) — basis of `0%` is critical for equal-width columns.
+(`align-items: center`) **won't vertically center text** if the parent has no height. Use `min-height: 100dvh`.
+**Grid's** `1fr` **≠** `flex: 1`. Grid distributes remaining space; flex uses `flex-grow` ratios.
 **Floats should only exist for image/text wrap patterns**. For layout, treat them as legacy.
-position: sticky silently fails if any ancestor has overflow: hidden or overflow: auto. The #1 "why isn't sticky working" question.
+`position: sticky` silently fails if any ancestor has `overflow: hidden` or `overflow: auto`. The #1 "why isn't sticky working" question.
 ## 🛠️ Project Idea: Build a Magazine-Style Homepage
 Design a fully responsive homepage with:
 
