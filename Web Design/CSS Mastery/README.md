@@ -46,7 +46,7 @@ Type/pseudo-element → 0,0,0,1
 2. Specificity
 3. Source order
 ### Tricks & Gotchas
-* **!important is debt**. Every use should come with a comment explaining why. If you need it, refactor your selectors instead.
+* **important is debt**. Every use should come with a comment explaining why. If you need it, refactor your selectors instead.
 * **Margin collapse** is real. Vertical margins between block elements combine into the larger one — but only if there's no padding, border, or gap between them.
 * { margin: 0; padding: 0; } is outdated. Use a modern reset like Andy Bell's CSS reset instead.
 * **Universal selector** (*) **has zero specificity**, but it's still slow on huge DOMs. Target the elements you actually need.
@@ -100,8 +100,10 @@ fixed — relative to viewport (use sparingly on mobile)
 sticky — the modern hybrid (requires a scroll container with overflow)
 ## Tricks & Gotchas
 **Flexbox gap works in all modern browsers now**. Stop using margin hacks for spacing between flex items.
-flex: **1 is shorthand for** (flex: 1 1 0%) — basis of 0% is critical for equal-width columns.
-(align-items: center) **won't vertically center text** if the parent has no height. Use min-height: 100dvh.
+
+flex: 
+**1 is shorthand for** (flex: 1 1 0%) — basis of 0% is critical for equal-width columns.
+(align-items: center) **won't vertically center text** if the parent has no height. Use min-height: `100dvh`.
 **Grid's** 1fr **≠** flex: 1. Grid distributes remaining space; flex uses flex-grow ratios.
 **Floats should only exist for image/text wrap patterns**. For layout, treat them as legacy.
 position: sticky silently fails if any ancestor has overflow: hidden or overflow: auto. The #1 "why isn't sticky working" question.
@@ -112,7 +114,8 @@ Design a fully responsive homepage with:
 * A hero section with overlapping elements using Grid
 * A 3-column feature section that gracefully collapses using Flexbox flex-wrap
 * A sidebar + main content layout that switches to stacked on mobile
-### **Stretch goal**: Recreate the layout using only CSS Grid (no Flexbox), then the reverse. This cements when to reach for which tool.
+### **Stretch goal**:
+ Recreate the layout using only CSS Grid (no Flexbox), then the reverse. This cements when to reach for which tool.
 
 ---
 
@@ -179,17 +182,17 @@ Design a fully responsive homepage with:
 ```
 ### Tricks & Gotchas
 * **Breakpoints should be content-driven, not device-driven**. Target where your layout breaks, not "iPhone 14".
-* 100vh **on mobile is broken** because it includes the address bar. Use 100dvh (dynamic viewport height).
-* rem **≠** em: rem is relative to root (html); em is relative to the parent. Use rem for global scaling, em for component-local.
+* `100vh` **on mobile is broken** because it includes the address bar. Use `100dvh` (dynamic viewport height).
+* `rem` **≠** `em`: `rem` is relative to root (html); `em` is relative to the parent. Use `rem` for global scaling, `em` for component-local.
 * **Container queries need an explicit width on the parent** (via container-type), or they silently don't fire.
-* clamp() **with** vw **units can break at extreme zoom**. Always test with 200% browser zoom.
-* **Avoid max-width media queries** ("mobile up to 767px"). They force negative thinking and miss wide tablets.
+* `clamp()` **with** `vw` **units can break at extreme zoom**. Always test with `200% `browser zoom.
+* **Avoid max-width media queries** (`"mobile up to 767px"`). They force negative thinking and miss wide tablets.
 ## 🛠️ Project Idea: Build a Documentation Site
 A real doc site has everything: fluid typography, content-driven breakpoints, code blocks, sidebars, tables.
-* Use clamp() for all headings and body text
+* Use `clamp()` for all headings and body text
 * Use container queries for the table of contents (changes based on sidebar width)
-* Implement a mobile-first nav that becomes a sidebar at 60rem
-* Test by resizing smoothly from 320px to 1920px
+* Implement a mobile-first nav that becomes a sidebar at `60rem`
+* Test by resizing smoothly from `320px` to `1920px`
 
 **Stretch goal**: Add dark mode using prefers-color-scheme and high-contrast support with prefers-contrast.
 
@@ -300,20 +303,21 @@ Static interfaces feel like 2010. Modern UI is kinetic, contextual, and expressi
   }
 }
 ```
-* **CSS variables don't animate by default**. You need @property to register them with a syntax.
-* ::before **and** ::after **need** content: "" even when empty. They won't render otherwise.
-* :has() **browser support is excellent now**, but it's still expensive. Don't chain 5 levels deep.
-* @property **requires registration** before the variable is used or it falls back to initial value mid-animation.
-* **Don't animate** box-shadow — animate a ::before pseudo-element with opacity instead, or use the newer filter: drop-shadow().
+* **CSS variables don't animate by default**. You need `@property` to register them with a syntax.
+* `::before` **and** `::after` **need** content: "" even when empty. They won't render otherwise.
+* `:has()` **browser support is excellent now**, but it's still expensive. Don't chain 5 levels deep.
+* `@property` **requires registration** before the variable is used or it falls back to initial value mid-animation.
+* **Don't animate** `box-shadow` — animate a `::before pseudo-element` with opacity instead, or use the newer `filter: drop-shadow()`.
 
 ## 🛠️ Project Idea: Build an Animated Onboarding Flow
 Create a multi-step onboarding wizard with:
 * Smooth transitions between steps (View Transitions API)
-* Animated progress bar with clip-path
-* Custom-styled form inputs using pseudo-classes (:focus-within, :invalid)
-* Micro-interactions: button ripples, success checkmarks via ::before
-* Full prefers-reduced-motion support
-### **Stretch goal**: Theme the entire flow with three distinct color schemes (light, dark, high-contrast) using only custom properties.
+* Animated progress bar with `clip-path`
+* Custom-styled form inputs using pseudo-classes (`:focus-within, :invalid`)
+* Micro-interactions: button ripples, success checkmarks via `::before`
+* Full `prefers-reduced-motion` support
+### **Stretch goal**: 
+Theme the entire flow with three distinct color schemes (light, dark, high-contrast) using only custom properties.
 
 ---
 
@@ -441,7 +445,8 @@ Create a reusable design system from scratch with:
 * **Two methodologies compared**: Build the same components in BEM, in Tailwind, and in CSS Modules — document tradeoffs
 * **Documentation site** that shows usage examples for each component
 * **Theming**: Support light, dark, and a brand-custom theme via custom properties only
-### **Stretch goal**: Add automated CSS architecture testing with [Stylelint](https://stylelint.io/) — enforce naming conventions, ban deep nesting, ban !important, and verify design tokens are used consistently.
+### **Stretch goal**: 
+Add automated CSS architecture testing with [Stylelint](https://stylelint.io/) — enforce naming conventions, ban deep nesting, ban !important, and verify design tokens are used consistently.
 
 ---
 
@@ -464,9 +469,9 @@ Create a reusable design system from scratch with:
 * **Can I Use** — never guess browser support again
 # 🧠 The Mindset Shifts
 1. **From pixels to relationships** — Stop positioning. Start describing how things relate.
-2. **From declarations to intent** — flex: 1 says "share space"; width: 33% says "be this wide".
-3. **From magic to systems** — Custom properties and clamp() replace hardcoded values with systems.
-4. **From hacks to features** — display: flow-root replaces clearfix; dvh replaces vh hacks.
+2. **From declarations to intent** — flex: 1 says "share space"; `width: 33%` says "be this wide".
+3. **From magic to systems** — Custom properties and `clamp()` replace hardcoded values with systems.
+4. **From hacks to features** — `display: flow-root` replaces clearfix; `dvh` replaces `vh` hacks.
 5. **From ownership to composition** — CSS Layers and utility classes replace specificity wars.
 
 ---
