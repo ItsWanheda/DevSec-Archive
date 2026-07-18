@@ -1,15 +1,15 @@
-# The Complete CSS Mastery Roadmap
+# ✨ The Complete CSS Mastery Roadmap
 ## From Fundamentals to Scalable Architecture
 Welcome to your structured journey from CSS novice to architect. This roadmap is designed so each level compounds on the previous one — resist the urge to skip ahead.
 
 ---
 
 # 📑 Table of Contents
-1. [Fundamentals](#-level-1-fundamentals) — Box Model, Selectors, Specificity, Cascade
-2. [Layout Mastery](#-level-2-layout-mastery) — Flexbox, Grid, Positioning, Floats vs Modern Layouts
-3. [Responsive Design](#-level-3-responsive-design) — Media Queries, Fluid Typography, Container Queries
-4. [Advanced CSS](#-level-4-advanced-css) — Animations, Variables, Pseudo-elements
-5. [Architecture & Scalability](#️-level-5-architecture--scalability) — BEM, SASS/SCSS, Tailwind vs Component CSS
+1. [📦 Fundamentals](#-level-1-fundamentals) — Box Model, Selectors, Specificity, Cascade
+2. [📐 Layout Mastery](#-level-2-layout-mastery) — Flexbox, Grid, Positioning, Floats vs Modern Layouts
+3. [📱 Responsive Design](#-level-3-responsive-design) — Media Queries, Fluid Typography, Container Queries
+4. [🎨 Advanced CSS](#-level-4-advanced-css) — Animations, Variables, Pseudo-elements
+5. [🏗️ Architecture & Scalability](#️-level-5-architecture--scalability) — BEM, SASS/SCSS, Tailwind vs Component CSS
 
 ---
 
