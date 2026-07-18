@@ -9,45 +9,45 @@
 
 ---
 
-# Table of Contents
-* Introduction
-* What is a Hash Function?
-* Properties of Cryptographic Hash Functions
-* **How Hashing Works**
-* **Hash Function Architecture**
-* **Common Hash Algorithms**
-* **MD5 Explained**
-* **SHA Family**
-* **SHA-256 Deep Dive**
-* **SHA-3 (Keccak)**
-* **Hashing vs Encryption**
-* **Hashing vs Checksums**
-* **Password Hashing**
-* **Password Hashing Algorithms**
-* **Salt Explained**
-* **Pepper Explained**
-* **Hash Collisions**
-* **Hash Cracking**
-* **Rainbow Tables**
-* **File Integrity Verification**
-* **Digital Signatures**
-* **Blockchain**
-* **Merkle Trees**
-* **Hash-Based Data Structures**
-* **Real-World Applications**
-* **Hashing in Programming**
-* **Performance**
-* **Best Practices**
-* **Common Mistakes**
-* **Frequently Asked Questions**
-* **Future of Hash Functions**
-* **Summary**
-* **Glossary**
-* **References**
+# 📚 Table of Contents
+
+- [🚀 Introduction](#-introduction)
+- [🔍 What is a Hash Function?](#-what-is-a-hash-function)
+- [🛡️ Properties of Cryptographic Hash Functions](#️-properties-of-cryptographic-hash-functions)
+- [⚙️ How Hashing Works](#️-how-hashing-works)
+- [🏗️ Hash Function Architecture](#️-hash-function-architecture)
+- [📖 Common Hash Algorithms](#-common-hash-algorithms)
+- [💥 MD5 Explained](#-md5-explained)
+- [🔐 SHA Family](#-sha-family)
+- [⚡ SHA-256 Deep Dive](#-sha-256-deep-dive)
+- [🧽 SHA-3 (Keccak)](#-sha-3-keccak)
+- [⚖️ Hashing vs Encryption](#️-hashing-vs-encryption)
+- [🧮 Hashing vs Checksums](#-hashing-vs-checksums)
+- [🔑 Password Hashing](#-password-hashing)
+- [🔒 Password Hashing Algorithms](#-password-hashing-algorithms)
+- [🌶️ Pepper Explained](#️-pepper-explained)
+- [💣 Hash Collisions](#-hash-collisions)
+- [🛠️ Hash Cracking](#️-hash-cracking)
+- [🌈 Rainbow Tables](#-rainbow-tables)
+- [✅ File Integrity Verification](#-file-integrity-verification)
+- [✍️ Digital Signatures](#️-digital-signatures)
+- [⛓️ Blockchain](#️-blockchain)
+- [🌳 Merkle Trees](#-merkle-trees)
+- [📦 Hash-Based Data Structures](#-hash-based-data-structures)
+- [🌍 Real-World Applications](#-real-world-applications)
+- [💻 Hashing in Programming](#-hashing-in-programming)
+- [📈 Performance](#-performance)
+- [⭐ Best Practices](#-best-practices)
+- [❌ Common Mistakes](#-common-mistakes)
+- [❓ Frequently Asked Questions](#-frequently-asked-questions)
+- [🚀 Future of Hash Functions](#-future-of-hash-functions)
+- [📝 Summary](#-summary)
+- [📚 Glossary](#-glossary)
+- [📖 References](#-references)
 
 ---
 
-# SECTION 1 — Introduction
+# 🚀 Introduction
 Hash functions are among the **most fundamental primitives in modern cryptography and computer science**. From verifying the integrity of downloaded files to securing billions of passwords, from powering blockchain networks to enabling digital signatures — hash functions are silently running underneath almost every secure system we interact with daily.
 
 ## What is a Hash Function?
@@ -98,7 +98,7 @@ The trajectory is clear: as hardware gets faster, hash functions must evolve to 
 
 ---
 
-# SECTION 2 — What is a Hash Function?
+# 🔍 What is a Hash Function?
 ## Definition
 A **hash function** `H` takes an input `m` of arbitrary length and returns a fixed-length output `h`:
 ```text
@@ -161,7 +161,7 @@ Notice how just adding a period completely changes the output.
 
 ---
 
-# SECTION 3 — Properties of Cryptographic Hash Functions
+# 🛡️ Properties of Cryptographic Hash Functions
 For a hash function to be considered **cryptographically secure**, it must satisfy the following properties:
 ## 1. Deterministic
 **Definition**: The same input must always produce the same output.
@@ -213,7 +213,7 @@ SHA-256("Hello")  = 185f8db3...e7e7e
 
 ---
 
-# SECTION 4 — How Hashing Works
+# ⚙️ How Hashing Works
 Hashing operates through a series of well-defined stages. Let's trace a small message through a typical hash function:
 ## Step-by-Step Process
 ```text
@@ -298,7 +298,7 @@ These operations are intentionally designed to:
 
 ---
 
-# SECTION 5 — Hash Function Architecture
+# 🏗️ Hash Function Architecture
 ## Core Components
 ### 1. Initialization Vector (IV)
 The IV is a fixed starting value that initializes the internal state of the hash function.
@@ -389,7 +389,7 @@ The final state is post-processed to produce the digest.
 
 ---
 
-# SECTION 6 — Common Hash Algorithms
+# 📖 Common Hash Algorithms
 ## Comparison Table
 | Algorithm | Year | Output (bits) | Speed | Security | Status |
 |-----------|------|---------------|-------|----------|--------|
@@ -436,7 +436,7 @@ The final state is post-processed to produce the digest.
 
 ---
 
-# SECTION 7 — MD5 Explained
+# 💥 MD5 Explained
 ## History
 MD5 was designed by **Ronald Rivest** in **1991** as a successor to MD4. It became one of the most widely used hash functions for two decades.
 ## How It Works
@@ -463,7 +463,7 @@ Modern GPUs can compute **billions** of MD5 hashes per second, making brute-forc
 
 ---
 
-# SECTION 8 — SHA Family
+# 🔐 SHA Family
 ## SHA-0
 * **Published**: 1993
 * **Withdrawn**: Quickly after SHA-1 release due to undisclosed weakness
@@ -504,7 +504,7 @@ Includes **SHA-224**, **SHA-256**, **SHA-384**, **SHA-512**. All use Merkle–Da
 
 ---
 
-# SECTION 9 — SHA-256 Deep Dive
+# ⚡ SHA-256 Deep Dive
 SHA-256 is the **workhorse of modern cryptography** — used in Bitcoin, TLS, code signing, and digital signatures.
 ## Algorithm Steps
 ```text
@@ -573,7 +573,7 @@ b3a07e89...  ubuntu-22.04.iso
 
 ---
 
-# SECTION 10 — SHA-3 (Keccak)
+# 🧽 SHA-3 (Keccak)
 ## Background
 SHA-3 is the result of an open NIST competition (2007–2012). **Keccak**, designed by a Belgian team, won due to its elegant sponge construction.
 ## Sponge Construction
@@ -618,7 +618,7 @@ Output bits are read from the rate portion, applying `f` between reads when need
 
 ---
 
-# SECTION 11 — Hashing vs Encryption
+# ⚖️ Hashing vs Encryption
 This is one of the most commonly confused distinctions in cryptography.
 ## Comparison Table
 | Property | Hashing | Encryption | Encoding | Obfuscation | Signing |
@@ -672,7 +672,7 @@ Example: `Sign(SHA-256(message), private_key)`
 
 ---
 
-# SECTION 12 — Hashing vs Checksums
+# 🧮 Hashing vs Checksums
 ## What is a Checksum?
 A checksum is a small value used to detect **accidental** errors in data — not malicious tampering.
 ## Comparison Table
@@ -692,7 +692,7 @@ A checksum is a small value used to detect **accidental** errors in data — not
 
 ---
 
-# SECTION 13 — Password Hashing
+# 🔑 Password Hashing
 ## Why Plain Hashes Are Insufficient
 Even though hashes are one-way, attackers don't need to reverse them — they can:
 1. **Pre-compute** millions of password candidates
@@ -741,7 +741,7 @@ Ability to increase cost over time as hardware improves.
 
 ---
 
-# SECTION 14 — Password Hashing Algorithms
+# 🔒 Password Hashing Algorithms
 ## Comparison Table
 | Algorithm | Year | Memory Hard | Tunable | Recommended |
 |-----------|------|-------------|---------|-------------|
@@ -827,7 +827,7 @@ hash = ph.hash('password123')
 
 ---
 
-# SECTION 15 — Salt Explained
+# 🌶️ Pepper Explained
 ## What is a Salt?
 A **salt** is a random, unique value added to a password before hashing.
 ```text
@@ -878,7 +878,7 @@ Format: `$algorithm$version$parameters$salt$hash`
 
 ---
 
-# SECTION 16 — Pepper Explained
+# 💣 Hash Collisions
 ## What is a Pepper?
 A **pepper** is a secret value added to a password before hashing, stored **separately** from the database.
 ```text
@@ -923,7 +923,7 @@ def verify_password(password: str, salt: bytes, expected_hash: str) -> bool:
 
 ---
 
-# SECTION 17 — Hash Collisions
+# 🛠️ Hash Cracking
 ## What is a Collision?
 A collision occurs when two different inputs produce the same hash output.
 ```text
@@ -970,7 +970,7 @@ Attackers craft two different messages that share the same hash by computing spe
 
 ---
 
-# SECTION 18 — Hash Cracking
+# 🌈 Rainbow Tables
 ## Attack Methods
 ### 1. Dictionary Attack
 Tests passwords from a wordlist:
@@ -1068,7 +1068,7 @@ With salt:
 
 ---
 
-# SECTION 20 — File Integrity Verification
+# ✅ File Integrity Verification
 ## Why Verify Downloads?
 Without verification, you can't tell if a download was:
 
@@ -1125,7 +1125,7 @@ The `sha256:...` digest guarantees the exact image contents.
 
 ---
 
-# SECTION 21 — Digital Signatures
+# ✍️ Digital Signatures
 ## How Hashing Enables Signatures
 Digital signatures combine hashing with asymmetric cryptography:
 ```text
@@ -1181,7 +1181,7 @@ Each signature in the chain uses SHA-256.
 
 ---
 
-# SECTION 22 — Blockchain
+# ⛓️ Blockchain
 ## How Hashing Secures Blockchain
 Hash functions are the **backbone** of blockchain technology.
 ## Bitcoin's Use of SHA-256
@@ -1227,7 +1227,7 @@ Changing any transaction invalidates the entire tree up to the root.
 
 ---
 
-# SECTION 23 — Merkle Trees
+# 🌳 Merkle Trees
 ## Structure
 A **Merkle Tree** is a binary tree where:
 
@@ -1264,7 +1264,7 @@ This requires only `O(log n)` hashes — efficient for large datasets.
 
 ---
 
-# SECTION 24 — Hash-Based Data Structures
+# 📦 Hash-Based Data Structures
 ## Hash Tables
 A data structure mapping keys to values using a hash function:
 ```text
@@ -1306,7 +1306,7 @@ When a node is added/removed, only `1/n` of keys need to be remapped.
 
 ---
 
-# SECTION 25 — Real-World Applications
+# 🌍 Real-World Applications
 ## TLS / HTTPS
 * **Handshake**: TLS 1.3 uses SHA-256 for HMAC and key derivation
 * **Certificates**: Signed with SHA-256
@@ -1357,7 +1357,7 @@ Master password derives encryption key via KDF
 
 ---
 
-# SECTION 26 — Hashing in Programming
+# 💻 Hashing in Programming
 ## Python
 ```python
 import hashlib
@@ -1509,7 +1509,7 @@ password_verify('password', $hash);
 
 ---
 
-# SECTION 27 — Performance
+# 📈 Performance
 ## Benchmark Comparison (Approximate, single-threaded, modern x86-64)
 | Algorithm | Throughput | Relative Speed |
 |-----------|------------|----------------|
@@ -1538,7 +1538,7 @@ Hardware constraints?         ──► SHA-256 (universal)
 
 ---
 
-# SECTION 28 — Best Practices
+# ⭐ Best Practices
 ## Algorithm Selection
 ## ✅ DO:
 
@@ -1593,7 +1593,7 @@ hash = hashlib.sha1(password.encode() + salt).hexdigest()
 
 ---
 
-# SECTION 29 — Common Mistakes
+# ❌ Common Mistakes
 ## Mistake 1: Storing Plain Passwords
 ```python
 # ❌ NEVER DO THIS
@@ -1646,7 +1646,7 @@ Choose algorithms that allow tuning parameters as hardware improves (Argon2id, b
 
 ---
 
-# SECTION 30 — Frequently Asked Questions
+# ❓ Frequently Asked Questions
 ## Beginner Questions
 ### Q1: What is a hash function in simple terms?
 A hash function is a mathematical function that converts any input into a fixed-size string of characters, which represents the data uniquely.
@@ -1741,7 +1741,7 @@ Current analysis suggests yes, but NIST recommends planning for migration to SHA
 
 ---
 
-# SECTION 31 — Future of Hash Functions
+# 🚀 Future of Hash Functions
 ## Post-Quantum Cryptography
 Quantum computers threaten current asymmetric cryptography (RSA, ECDSA), but their impact on hash functions is more limited:
 * **Grover's algorithm** reduces brute-force security from `2^n` to `2^(n/2)`
@@ -1783,7 +1783,7 @@ In Zero Trust models, every request must be verified:
 
 ---
 
-# SECTION 32 — Summary
+# 📝 Summary
 Hash functions are the **unsung heroes of modern cybersecurity**. They quietly secure passwords, verify downloads, power blockchains, and underpin digital signatures. Understanding them is essential for any security professional.
 ## Key Takeaways
 🔑 **Hash Functions** convert any input into a fixed-size output, irreversibly.
@@ -1807,7 +1807,7 @@ As you build secure systems, remember:
 
 ---
 
-# SECTION 33 — Glossary
+# 📚 Glossary
 **Algorithm** — A well-defined procedure or formula for solving a problem.
 
 **Argon2id** — The recommended variant of the Argon2 password hashing algorithm, combining resistance to side-channel and GPU attacks.
@@ -1900,7 +1900,7 @@ As you build secure systems, remember:
 
 ---
 
-# SECTION 34 — References
+# 📖 References
 ## Standards and Specifications
 * **NIST FIPS 180-4** — Secure Hash Standard (SHA-1, SHA-2)
 * **NIST FIPS 202** — SHA-3 Standard (Permutation-Based Hash)
