@@ -6,39 +6,39 @@
 ---
 
 # Table of Contents
-* Introduction
-* What is Clean Architecture?
-* Why Clean Architecture Exists
-* History & Origins
-* Architecture Goals
-* The Dependency Rule
-* SOLID Principles Recap
-* Architectural Comparisons
-* Core Layers
-* Architecture Diagrams
-* Folder Structures by Stack
-* Request Lifecycle
-* Dependency Injection
-* Repository Pattern
-* Use Cases
-* Domain Layer Deep Dive
-* Infrastructure Layer
-* Presentation Layer
-* Authentication Example
-* Error Handling
-* Validation Strategy
-* Database Independence
-* Testing Strategy
-* Scaling Clean Architecture
-* Security Architecture
-* Performance Considerations
-* Common Mistakes
-* Real Project Example: E-Commerce API
-* Comparison Tables
-* Best Practices Checklist
-* Frequently Asked Questions
-* Summary
-* Resources
+* [Introduction](#introduction)
+* [What is Clean Architecture?](#what-is-clean-architecture)
+* [Why Clean Architecture Exists](#why-clean-architecture-exists)
+* [History & Origins](#history--origins)
+* [Architecture Goals](#architecture-goals)
+* [The Dependency Rule](#the-dependency-rule)
+* [SOLID Principles Recap](#solid-principles-recap)
+* [Architectural Comparisons](#architectural-comparisons)
+* [Core Layers](#core-layers)
+* [Architecture Diagrams](#architecture-diagrams)
+* [Folder Structures by Stack](#folder-structures-by-stack)
+* [Request Lifecycle](#request-lifecycle)
+* [Dependency Injection](#dependency-injection)
+* [Repository Pattern](#repository-pattern)
+* [Use Cases](#use-cases)
+* [Domain Layer Deep Dive](#domain-layer-deep-dive)
+* [Infrastructure Layer](#infrastructure-layer)
+* [Presentation Layer](#presentation-layer)
+* [Authentication Example](#authentication-example)
+* [Error Handling](#error-handling)
+* [Validation Strategy](#validation-strategy)
+* [Database Independence](#database-independence)
+* [Testing Strategy](#testing-strategy)
+* [Scaling Clean Architecture](#scaling-clean-architecture)
+* [Security Architecture](#security-architecture)
+* [Performance Considerations](#performance-considerations)
+* [Common Mistakes](#common-mistakes)
+* [Real Project Example: E-Commerce API](#real-project-example-e-commerce-api)
+* [Comparison Tables](#comparison-tables)
+* [Best Practices Checklist](#best-practices-checklist)
+* [Frequently Asked Questions](#frequently-asked-questions)
+* [Summary](#summary)
+* [Resources](#resources)
 
 ---
 
