@@ -921,7 +921,7 @@ Switch looks up BB:BB:BB:BB:BB:BB → if known, forward only to that port
 > ⚠️ Warning
     Classful addressing is obsolete. Use CIDR (Classless Inter-Domain Routing) instead. 
 ## CIDR (Classless Inter-Domain Routing)
-Replaces classes with variable-length prefixes. Written as 'IP/prefix_length'.
+Replaces classes with variable-length prefixes. Written as `IP/prefix_length`.
 ```text
 192.168.1.0/24  =  256 addresses   (subnet mask 255.255.255.0)
 10.0.0.0/8      =  16,777,216 addresses  (subnet mask 255.0.0.0)
@@ -981,9 +981,9 @@ Allocated by IANA → Regional Internet Registries (RIRs) → ISPs → End users
 ### IPv6 Address Compression
 * Leading zeros can be omitted: '2001:db8:85a3::8a2e:370:7334'
 * Consecutive groups of zeros can be :: (only once per address):
-* * '2001:0db8:0000:0000:0000:ff00:0042:8329 → 2001:db8::ff00:42:8329'
-* '::1' = loopback
-* '::' = unspecified (all zeros)
+* * `2001:0db8:0000:0000:0000:ff00:0042:8329 → 2001:db8::ff00:42:8329`
+* `::1` = loopback
+* `::` = unspecified (all zeros)
 ## IPv6 Address Types
 | Type | Example | Scope |
 |------|---------|-------|
