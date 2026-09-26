@@ -55,7 +55,7 @@ The archive explores how to design, implement, secure, test, and operate backend
 
 Foundations and architectural patterns for building modern server-side applications.
 
-* HTTP Fundamentals
+* [HTTP Fundamentals](Backend%20Engineering/HTTP%20Fundamentals/README.md) — comprehensive protocol and backend foundation
 * REST API Design
 * GraphQL
 * WebSockets
