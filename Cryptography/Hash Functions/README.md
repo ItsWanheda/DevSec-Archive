@@ -51,7 +51,7 @@
 Hash functions are among the **most fundamental primitives in modern cryptography and computer science**. From verifying the integrity of downloaded files to securing billions of passwords, from powering blockchain networks to enabling digital signatures — hash functions are silently running underneath almost every secure system we interact with daily.
 
 ## What is a Hash Function?
-A **hash function** is a mathematical algorithm that transforms an input of any size into a fixed-size output, known as a **hash, digest**, or **fingerprint**. The same input will always produce the same output, but even a tiny change in the input produces a dramatically different result.
+A **cryptographic hash function** maps an input byte string to a fixed-size digest. The digest is a compact representation of the input; it is not a reversible encoding and it is not automatically an authentication mechanism. The same input produces the same digest under the same algorithm and encoding. A small input change should produce an output that is computationally indistinguishable from a fresh random digest.
 
 ## Why Hash Functions Exist
 Hash functions solve a critical problem: how do you verify that data hasn't been tampered with, identify content uniquely, or securely store sensitive information like passwords? Without hash functions:
@@ -137,7 +137,7 @@ Regardless of input size, the output length is constant for a given algorithm:
 | SHA-512 | 512 bits (64 bytes) |
 | BLAKE3 | 256 bits (configurable) |
 ### 3. One-Way Transformation (Pre-image Resistance)
-It is computationally infeasible to reverse the hash back to the original input.
+A secure hash is designed to make finding a preimage computationally infeasible; this does not mean that every real-world hash value is impossible to recover. Low-entropy inputs such as common passwords can be guessed and re-hashed.
 ```text
 Forward:    "password123"  ───► SHA-256 ───► "ef92b778..."
 Backward:   "ef92b778..."  ───► ??? ──────► NOT FEASIBLE
@@ -409,11 +409,11 @@ The final state is post-processed to produce the digest.
 ## Detailed Algorithm Summaries
 ### MD5 (Message Digest 5)
 **Output**: 128 bits
-**Status**: Completely broken — collisions generated in seconds
+**Status**: Cryptographically broken for collision resistance; do not use it for security-sensitive integrity, signatures, or password storage.
 **Use today**: Only for non-security checksums
 ### SHA-1 (Secure Hash Algorithm 1)
 **Output**: 160 bits
-**Status**: Broken (Google SHAttered, 2017)
+**Status**: Collision resistance is broken; the 2017 SHAttered demonstration produced a practical SHA-1 collision. NIST recommends transitioning away from SHA-1.
 **Use today**: Legacy systems only — migrate away
 ### SHA-2 Family
 **Members**: SHA-224, SHA-256, SHA-384, SHA-512, SHA-512/224, SHA-512/256
@@ -1953,3 +1953,1757 @@ This article is intended for educational purposes. Always consult current standa
 
 ---
 *Maintained with curiosity by [ItsWanheda](https://github.com/ItsWanheda)*
+
+---
+
+# 🧠 Advanced Learning Extension
+
+> This extension adds implementation-level reasoning, laboratories, review checklists, and protocol-design guidance to the core chapter. It is intentionally structured as a learning reference rather than a list of memorization facts.
+
+## 🧭 1. Learning Objectives — What You Should Be Able to Do
+
+After completing this chapter, you should be able to explain what a cryptographic hash is without confusing it with encryption.
+
+You should be able to distinguish a general-purpose hash from a password hashing function.
+
+You should be able to explain preimage resistance, second-preimage resistance, and collision resistance.
+
+You should be able to explain why collision resistance is approximately a birthday-bound property.
+
+You should be able to choose SHA-256, SHA-512, SHA3-256, SHAKE, BLAKE2, or BLAKE3 for an appropriate engineering context.
+
+You should know why MD5 and SHA-1 are unsuitable for new security-sensitive designs.
+
+You should understand why SHA-256 is not a password-storage algorithm.
+
+You should be able to explain the role of a unique random password salt.
+
+You should be able to explain what a pepper is and where its secret should live.
+
+You should understand HMAC as a keyed construction rather than a plain hash.
+
+You should understand HKDF as a key-derivation construction built from HMAC.
+
+You should recognize when a length-extension attack is relevant.
+
+You should understand why canonicalization and encoding can be as important as the hash itself.
+
+You should know why domain separation prevents accidental cross-protocol reuse.
+
+You should be able to use test vectors to validate an implementation.
+
+You should be able to design a migration path away from a legacy password hash.
+
+You should be able to review a hash-related pull request for common security mistakes.
+
+You should be able to document algorithm choice, parameters, compatibility requirements, and upgrade plans.
+
+## 📐 2. The Mathematical Model
+
+Let M be a finite byte string and let H be a hash function.
+
+The digest is written as H(M) = D.
+
+For SHA-256, D has 256 bits, or 32 bytes.
+
+For SHA3-256, D also has 256 bits, but the internal construction is different.
+
+The domain may be extremely large while the output space is finite.
+
+This immediately implies that collisions must exist for any fixed-length hash.
+
+A collision is a pair M1 != M2 such that H(M1) = H(M2).
+
+Security does not require collisions to be mathematically impossible.
+
+Security requires finding useful collisions to be computationally infeasible under the relevant attack model.
+
+A hash is deterministic: the same bytes and algorithm produce the same digest.
+
+Hashing text requires an encoding decision because characters are not themselves bytes.
+
+UTF-8 is a common interoperable choice, but protocols must define their encoding explicitly.
+
+Whitespace, normalization, line endings, and serialization can therefore change the digest.
+
+Never compare the visual appearance of two strings when the security decision depends on their bytes.
+
+Define the exact byte representation before defining the hash operation.
+
+Cryptographic specifications normally operate on byte strings, not vague notions of human-readable text.
+
+## 🎯 3. Security Properties — Precise Definitions
+
+Preimage resistance asks whether an attacker can find M for a chosen digest D such that H(M) = D.
+
+Second-preimage resistance starts with a known M and asks for a different M2 with H(M2) = H(M).
+
+Collision resistance asks for any two distinct messages that hash to the same digest.
+
+These properties are related but are not interchangeable.
+
+A collision attacker has more freedom than a second-preimage attacker.
+
+A second-preimage attack starts from an existing message chosen outside the attacker's control.
+
+Collision resistance is especially important for digital signatures and certificate-style workflows.
+
+Preimage resistance is relevant when a digest itself is exposed and treated as a commitment.
+
+Second-preimage resistance matters when an existing authenticated object must not be replaceable.
+
+A secure hash also aims for strong diffusion across its output.
+
+The avalanche effect is an observed design property, not a substitute for formal cryptanalysis.
+
+Uniform-looking outputs do not prove cryptographic security.
+
+Fast computation is desirable for integrity hashing but undesirable for password hashing.
+
+Hash output length is a security parameter, not merely a storage-format preference.
+
+Security claims must always be tied to an algorithm, construction, output length, and attack model.
+
+Do not describe a hash as simply 'secure' without explaining what property and use case you mean.
+
+## 🎂 4. Birthday Bound and Collision Probability
+
+For an ideal n-bit hash, there are 2^n possible digest values.
+
+Because multiple messages map into that finite space, collisions eventually become likely.
+
+The birthday phenomenon places the generic collision-search scale around 2^(n/2).
+
+For a 256-bit ideal hash, generic collision search is therefore associated with roughly 2^128 work.
+
+This is not the same as saying a 256-bit hash has only 128 bits of security for every purpose.
+
+Preimage and second-preimage security have different generic bounds.
+
+A collision attack can exploit the freedom to choose both messages.
+
+An application must therefore select a digest length appropriate to its collision-resistance requirement.
+
+The birthday bound is a generic mathematical baseline, not a forecast of the cost of every practical attack.
+
+Real algorithms can have structural attacks that are better than generic search.
+
+Conversely, engineering controls may make a theoretical collision irrelevant to a particular protocol.
+
+Never convert a digest length directly into a universal security rating.
+
+Do not say 'there can never be a collision' for a fixed-length hash.
+
+Instead, say that finding a useful collision is computationally infeasible for the chosen algorithm and threat model.
+
+Longer outputs increase the generic collision-search space.
+
+Algorithm selection and protocol construction still matter even when the digest is long.
+
+## 🔬 5. SHA-2 — Engineering View
+
+SHA-2 is a family, not one single algorithm.
+
+NIST FIPS 180-4 specifies SHA-224, SHA-256, SHA-384, SHA-512, SHA-512/224, and SHA-512/256.
+
+SHA-256 produces a 256-bit digest.
+
+SHA-512 produces a 512-bit digest.
+
+SHA-384 produces a 384-bit digest derived from the SHA-512 family construction.
+
+SHA-512/256 produces a 256-bit digest using a distinct initialization value from SHA-512.
+
+SHA-2 functions use a Merkle-Damgard-style iterative structure.
+
+SHA-256 processes 512-bit message blocks.
+
+SHA-512-family functions process 1024-bit message blocks.
+
+SHA-256 uses 32-bit working words.
+
+SHA-512-family functions use 64-bit working words.
+
+Implementations should normally come from maintained cryptographic libraries.
+
+Do not implement SHA-256 from a textbook for production authentication or integrity controls.
+
+Use official test vectors when validating an implementation or interoperability layer.
+
+NIST has announced a revision of FIPS 180-4, so standards tracking should be part of long-lived engineering work.
+
+## 🧽 6. SHA-3 — Sponge Construction
+
+SHA-3 is based on Keccak and was standardized by NIST in FIPS 202.
+
+SHA3-224, SHA3-256, SHA3-384, and SHA3-512 are fixed-output hash functions.
+
+SHAKE128 and SHAKE256 are extendable-output functions.
+
+An XOF can produce output of a caller-selected length.
+
+SHA-3 uses a sponge construction rather than the SHA-2 Merkle-Damgard construction.
+
+The sponge has a state divided conceptually into rate and capacity.
+
+During absorption, input is incorporated into the state through repeated permutations.
+
+During squeezing, output is read from the state and more permutation rounds are applied as needed.
+
+The construction provides a useful architectural diversity from SHA-2.
+
+SHA-3 does not automatically make SHA-2 obsolete.
+
+NIST explicitly describes SHA-3 as a supplement to SHA-1 and SHA-2.
+
+Applications should select based on requirements, interoperability, library support, and protocol specifications.
+
+SHAKE can be useful when a protocol needs a variable-length digest or derived byte stream.
+
+Do not invent a SHAKE truncation convention without specifying it precisely.
+
+Record the algorithm, output length, encoding, and domain/context rules in the protocol.
+
+## 🧩 7. SHAKE and Extendable-Output Functions
+
+An ordinary fixed-length hash has a predetermined digest size.
+
+An XOF allows the caller to request a chosen number of output bytes.
+
+SHAKE128 and SHAKE256 are standardized by NIST FIPS 202.
+
+An XOF should not be treated as a magical source of unlimited independent entropy.
+
+Its security properties depend on the construction, requested length, and protocol use.
+
+Protocol designers must specify exactly how many bytes are consumed.
+
+If several values are derived from one XOF invocation, define their boundaries explicitly.
+
+Domain separation is especially useful when one primitive serves multiple protocol roles.
+
+A context string can distinguish one derivation from another.
+
+Do not silently truncate or concatenate XOF outputs in ways the protocol does not define.
+
+Test vectors should cover short outputs, long outputs, empty inputs, and context values where applicable.
+
+XOFs can simplify constructions that would otherwise need several fixed-length hashes.
+
+They are especially attractive in modern cryptographic protocols requiring flexible output lengths.
+
+Use a well-maintained implementation rather than coding Keccak permutations yourself.
+
+Document whether the protocol uses SHAKE128 or SHAKE256 and why.
+
+## 🔑 8. HMAC — Hashing With a Secret Key
+
+HMAC is a keyed message-authentication construction defined by RFC 2104.
+
+It combines a secret key with a cryptographic hash function.
+
+HMAC provides message authentication and integrity when the secret key is protected.
+
+A plain hash does not prove who created the message.
+
+Anyone who can calculate H(M) can calculate the same plain digest.
+
+With HMAC, an attacker without the key should not be able to create a valid tag.
+
+HMAC is therefore appropriate when two parties share a secret key.
+
+HMAC-SHA-256 is widely deployed and broadly supported.
+
+The exact key handling, tag length, encoding, and comparison rules belong to the protocol.
+
+Do not use a homemade construction such as H(secret || message) when HMAC is available.
+
+Do not use a plain hash as a substitute for authentication.
+
+Verify MACs before processing security-sensitive message contents.
+
+Use constant-time comparison for MAC verification.
+
+Protect HMAC keys using the same discipline applied to other cryptographic secrets.
+
+Rotate keys according to the protocol's threat model and operational requirements.
+
+## 🌿 9. HKDF — Turning Secrets Into Keys
+
+HKDF is the HMAC-based Extract-and-Expand Key Derivation Function specified in RFC 5869.
+
+HKDF is designed to derive cryptographic keys from input keying material.
+
+HKDF separates extraction from expansion.
+
+The extract step turns potentially uneven input keying material into a pseudorandom key.
+
+The expand step derives one or more context-specific outputs.
+
+The salt parameter is not the same concept as a password-storage salt.
+
+HKDF's info field can bind derived material to an application context.
+
+Domain separation through explicit context values reduces accidental key reuse.
+
+One master secret can therefore produce independent subkeys for different protocol purposes.
+
+Never reuse the same derived key for unrelated cryptographic operations without an explicit design reason.
+
+Record the hash function, salt behavior, info encoding, and output lengths.
+
+Test HKDF implementations against published vectors.
+
+HKDF does not replace a password hashing function.
+
+HKDF also does not turn a weak password into a secure password database.
+
+Password-derived key material requires a password-specific KDF such as Argon2id, scrypt, or PBKDF2 when appropriate.
+
+## 🔐 10. Password Hashing Is a Different Problem
+
+General-purpose cryptographic hashes are designed to be computationally efficient.
+
+Password hashing has the opposite operational objective: make each guess expensive.
+
+Passwords are often low-entropy human-chosen secrets.
+
+An attacker who obtains a password database can perform guesses offline.
+
+SHA-256 is therefore not an appropriate password-storage primitive by itself.
+
+Modern password hashing uses adaptive cost parameters.
+
+Argon2id, scrypt, bcrypt, and PBKDF2 are common choices under appropriate requirements.
+
+OWASP currently recommends Argon2id for new password-storage deployments.
+
+OWASP also documents scrypt and bcrypt alternatives and PBKDF2 when FIPS-140 requirements apply.
+
+The exact parameters must be benchmarked against the application's hardware and authentication workload.
+
+A parameter set copied blindly from another environment may be too weak or too expensive.
+
+Store enough metadata to know which algorithm and parameters protected each password.
+
+Design the authentication layer so parameters can be upgraded over time.
+
+Never log passwords or password-derived secrets.
+
+Never use a global static salt as the sole defense against offline cracking.
+
+## 🧂 11. Password Salts — What They Actually Do
+
+A password salt is normally a unique random value associated with one password record.
+
+The salt is not a secret.
+
+The salt can usually be stored alongside the password hash.
+
+Its purpose includes preventing identical passwords from producing identical stored values.
+
+Unique salts also prevent one precomputed lookup table from directly serving many records.
+
+An attacker who steals the database still sees the salt.
+
+That is acceptable and expected.
+
+Salt uniqueness is more important than salt secrecy.
+
+Generate salts with a cryptographically secure random source when the password hashing library does not generate them automatically.
+
+Do not use a username, email address, or timestamp as a replacement for a random salt.
+
+Do not reuse one salt across every account.
+
+Modern password-hashing formats commonly encode the salt and cost parameters into the stored representation.
+
+Salt handling should be delegated to mature libraries where possible.
+
+Do not manually concatenate password and salt if the password hashing API already defines the construction.
+
+Test that two identical passwords produce different stored hashes under the selected password-hashing library.
+
+## 🌶️ 12. Peppers — A Separate Secret
+
+A pepper is an additional secret used in a password-protection design.
+
+Unlike a salt, a pepper is intended to remain secret.
+
+A pepper can provide defense in depth if an attacker obtains only the password database.
+
+The pepper must therefore be stored separately from the database.
+
+A secret manager, HSM, or protected application configuration can be appropriate depending on the architecture.
+
+A pepper does not compensate for weak passwords or a poor password hashing algorithm.
+
+If the pepper is compromised, the system must have a recovery and rotation strategy.
+
+Pepper rotation is harder than salt rotation because the original password is normally unavailable.
+
+OWASP describes pre-hashing and post-hashing pepper strategies.
+
+Post-hashing HMAC can separate database compromise from possession of the pepper.
+
+Do not place the pepper in source control.
+
+Do not place the pepper in a public repository or client-side application.
+
+Do not describe a pepper as a replacement for a salt.
+
+Document the operational assumptions around availability and rotation before deploying a pepper.
+
+## 🧾 13. PHC-Style Password Records and Upgrade Metadata
+
+Password records should carry enough information to verify and upgrade them safely.
+
+A robust record can identify the algorithm, version, cost parameters, salt, and derived output.
+
+The Password Hashing Competition format is commonly represented by modular strings.
+
+An example conceptual record can look like: `$argon2id$v=19$m=19456,t=2,p=1$...$...`.
+
+The exact encoding must follow the library's documented format.
+
+Do not parse cryptographic record formats with fragile ad-hoc string splitting when a maintained library exists.
+
+On successful login, the verifier can determine whether the stored parameters are outdated.
+
+If they are outdated, the password can be re-hashed using the current policy.
+
+This is often called opportunistic or just-in-time password rehashing.
+
+Users do not need to know which internal password-hashing algorithm protects their account.
+
+Migration should be transparent when possible.
+
+Records should never contain the plaintext password.
+
+Do not store a reversible encryption of the password merely to simplify migration.
+
+Plan for accounts that do not log in during the migration period.
+
+Password reset workflows can complete migration for dormant accounts.
+
+## 📏 14. Encoding, Serialization, and Canonicalization
+
+Hash functions operate on bytes.
+
+Applications often begin with higher-level values such as JSON objects, strings, or database rows.
+
+Two equivalent-looking structures can have different byte encodings.
+
+JSON key order can differ.
+
+Whitespace can differ.
+
+Unicode normalization can differ.
+
+Line endings can differ between operating systems.
+
+Number formatting can differ between serializers.
+
+Base64 can have multiple representational choices depending on alphabet and padding rules.
+
+Hexadecimal is an encoding of bytes, not a cryptographic transformation.
+
+Canonicalization defines exactly which bytes represent a logical object.
+
+Security protocols should specify canonicalization when hashes or signatures cover structured data.
+
+Never hash a language-specific object representation and assume another implementation will reproduce it.
+
+Use protocol-defined serialization rules.
+
+Include test vectors that show the exact serialized bytes before hashing.
+
+Debugging should compare bytes first and human-readable values second.
+
+## 🛡️ 15. Length-Extension Attacks
+
+Some iterated hash constructions expose a property known as length extension.
+
+SHA-1 and SHA-2 are examples of constructions for which naive secret-prefix MAC designs can be vulnerable.
+
+Suppose an attacker knows H(K || M) and can infer the length of K || M.
+
+In affected constructions, the attacker may be able to calculate a valid digest for M || padding || M2 without knowing K.
+
+This does not mean SHA-256 itself is broken.
+
+The weakness comes from using the primitive in an unsafe construction.
+
+Do not build authentication as H(secret || message) when HMAC is available.
+
+HMAC is specifically designed to avoid this class of naive composition problem.
+
+SHA-3's sponge design has different structural properties, but protocol design still matters.
+
+A protocol should specify the exact authenticated construction rather than saying 'the message is hashed with a secret'.
+
+Length extension is a classic example of why cryptographic primitives and cryptographic protocols are different layers.
+
+Library APIs for HMAC are safer than manually reproducing the construction.
+
+Security reviews should search for homemade keyed-hash constructions.
+
+Include negative tests for altered messages and altered authentication tags.
+
+Treat cryptographic composition as a design problem, not a string-concatenation problem.
+
+## 🧱 16. Domain Separation
+
+Domain separation gives related cryptographic operations distinct contexts.
+
+A context string or structured label can prevent accidental cross-use of the same primitive output.
+
+For example, a protocol might distinguish `key-derivation` from `token-hash`.
+
+The exact domain-separation mechanism depends on the primitive and protocol.
+
+Do not rely on comments to separate cryptographic domains.
+
+Encode the domain explicitly into the input or use the construction's built-in context field.
+
+HKDF provides an `info` field specifically useful for contextual derivation.
+
+Hash-to-curve suites require domain separation as part of their design.
+
+Structured protocols should define labels as exact byte strings.
+
+Avoid ambiguous concatenation such as `H(A || B)` when multiple `(A,B)` pairs can encode the same byte sequence.
+
+Length-prefixing or a canonical serialization can remove ambiguity.
+
+Domain separation can reduce cross-protocol substitution opportunities.
+
+It also makes code review easier because each derived value has an explicit purpose.
+
+Use stable, versioned labels when compatibility matters.
+
+Changing a domain label can intentionally create a cryptographic namespace boundary.
+
+## 🧪 17. Test Vectors and Verification
+
+Cryptographic code should be validated against known-answer tests.
+
+A known-answer test supplies fixed input and expected output.
+
+Test vectors can detect encoding errors, padding errors, endianness mistakes, and parameter mismatches.
+
+Include the empty input because it catches many implementation mistakes.
+
+Include a short ASCII input.
+
+Include a multi-block input.
+
+Include non-ASCII UTF-8 data when the application handles text.
+
+Include long inputs when streaming behavior matters.
+
+Verify both hexadecimal and raw-byte representations where applicable.
+
+Do not copy a digest from a random web page as an authoritative test vector.
+
+Prefer NIST standards, RFC test vectors, or official algorithm specifications.
+
+Test vectors are evidence that an implementation matches a specification.
+
+They are not proof that the application uses the primitive safely.
+
+Add regression tests whenever a cryptographic bug is discovered.
+
+Keep test vectors deterministic and version-controlled.
+
+Never include real production secrets in test vectors.
+
+## 📦 18. Streaming Hashing
+
+Hash functions are naturally useful for large files and streams.
+
+Reading an entire multi-gigabyte file into memory is unnecessary.
+
+Most mature libraries provide incremental update APIs.
+
+The application can read a chunk, update the hash state, and continue until EOF.
+
+The final digest is produced after the final chunk.
+
+Chunk size affects I/O behavior but does not change the mathematical digest.
+
+Binary mode must be used for file hashing.
+
+Text mode can alter line endings or perform decoding.
+
+File hashing should therefore operate on raw bytes.
+
+Parallel hashing requires an algorithm or construction designed for parallel composition.
+
+BLAKE3 is designed with a tree structure that enables parallel processing.
+
+Do not assume that parallelizing arbitrary SHA-256 calls produces one equivalent SHA-256 digest.
+
+For resumable transfers, store enough state or use a protocol designed for chunk verification.
+
+An overall file digest can be combined with per-chunk hashes when the threat model requires localized verification.
+
+Define whether metadata such as filenames is authenticated separately from file content.
+
+## 📁 19. File Integrity Is Not Automatically Authenticity
+
+A published SHA-256 digest can detect accidental or malicious modification only if the digest itself is trusted.
+
+If an attacker can replace both the file and the published digest, plain hashing provides no authenticity.
+
+A trusted signature, authenticated channel, or independently protected digest is needed for stronger authenticity.
+
+This distinction is critical for software downloads.
+
+A website that serves a file and its digest from the same compromised origin does not provide independent trust.
+
+Digital signatures bind a digest to a signing key.
+
+Package managers may use signatures, transparency systems, or trusted metadata.
+
+TLS protects a connection but does not by itself establish long-term artifact provenance.
+
+Software supply-chain security therefore combines hashing with authentication and provenance.
+
+Record the exact artifact bytes before calculating the digest.
+
+Do not hash an archive after extraction when the distribution artifact itself is what users need to verify.
+
+Do not compare only filenames or file sizes.
+
+Use reproducible builds where practical so independent parties can calculate matching artifacts.
+
+Hash verification is one control inside a larger software supply-chain model.
+
+## ✍️ 20. Hashes and Digital Signatures
+
+Digital signature schemes commonly hash a message before signing or internally incorporate a digest.
+
+Hashing makes large messages manageable for signature operations.
+
+The signer uses a private key while verifiers use a public key.
+
+A valid signature does not mean the hash function alone provides authenticity.
+
+Authenticity comes from the signature scheme and trust in the public key.
+
+Collision resistance is important because an attacker should not be able to substitute a different message with the same signed digest.
+
+Signature specifications normally identify the exact hash function and encoding rules.
+
+Do not mix-and-match signature encodings without following the protocol.
+
+RSA signatures require carefully specified padding and encoding.
+
+Modern elliptic-curve signature systems have their own message-processing rules.
+
+EdDSA uses a defined hash-based internal construction rather than simply exposing a generic 'hash then sign' API.
+
+Post-quantum signature systems may also use hash functions extensively.
+
+Hash-based signatures such as LMS and XMSS rely heavily on one-way hash constructions.
+
+Signature verification should be performed by a mature cryptographic library.
+
+Do not implement signature padding or key parsing yourself unless the task is explicitly educational.
+
+## 🌳 21. Merkle Trees
+
+A Merkle tree commits to a collection of values using a hierarchy of hashes.
+
+Leaf nodes commonly represent hashes of individual data items.
+
+Parent nodes are derived from child values according to the protocol.
+
+The root digest represents the complete tree state.
+
+A Merkle proof can demonstrate inclusion without sending the entire dataset.
+
+Proof size grows logarithmically with the number of leaves in a balanced tree.
+
+Real protocols must define leaf encoding and internal-node encoding precisely.
+
+Naive concatenation can create ambiguity if boundaries are not encoded.
+
+Domain separation between leaf and internal-node hashing can prevent structural ambiguity.
+
+Bitcoin uses Merkle trees for transaction commitments inside blocks.
+
+Distributed systems can use Merkle structures to compare datasets efficiently.
+
+Content-addressed storage systems use related hash-based commitment ideas.
+
+Changing one leaf changes the hashes on its path to the root.
+
+The root can therefore act as a compact commitment to a large set.
+
+Merkle trees provide integrity commitments, not confidentiality.
+
+## 🔗 22. Content Addressing
+
+Content addressing names an object by a digest derived from its content.
+
+If the content changes, the identifier changes.
+
+This makes content identity naturally tied to integrity.
+
+Git uses cryptographic object identifiers as part of its object model.
+
+Modern Git deployments have additional protections and migration considerations around hash algorithms.
+
+Content addressing is useful for caching and deduplication.
+
+It can also improve immutability guarantees when references are managed correctly.
+
+A digest alone does not tell you whether the content is trustworthy.
+
+An attacker can create a different object with its own valid digest.
+
+Trust comes from the mechanism that tells you which digest you should expect.
+
+Content-addressed systems therefore commonly combine hashes with signed references, authenticated metadata, or access controls.
+
+Collision resistance becomes particularly important when identifiers are used as object identity.
+
+Never assume a short truncated digest is collision-safe merely because the full algorithm is strong.
+
+Document truncation rules whenever a digest is shortened for display or indexing.
+
+Use full-width identifiers for security decisions unless a specification explicitly permits truncation.
+
+## 🐙 23. Git and Hash Migration
+
+Git historically used SHA-1 for object identifiers.
+
+The existence of practical SHA-1 collision attacks changed the threat model for systems that use SHA-1 as an object identity primitive.
+
+Modern Git includes collision-detection and ongoing work around SHA-256 repositories.
+
+This is an important lesson: cryptographic migration is a system-design problem, not simply a search-and-replace operation.
+
+Object formats, references, interoperability, caches, signatures, and tooling may all depend on the hash.
+
+Security-sensitive migration should preserve the ability to validate historical data.
+
+Do not rewrite identifiers casually when external systems depend on them.
+
+Record the algorithm version alongside persistent cryptographic identifiers.
+
+Migration plans should define compatibility periods.
+
+New objects can sometimes use a stronger scheme while legacy objects remain readable.
+
+Applications should avoid assuming that every Git object identifier is always 40 hexadecimal characters.
+
+Do not build security logic around a fixed textual hash length without a protocol requirement.
+
+The broader engineering lesson applies to databases, package registries, and artifact stores.
+
+Cryptographic agility must be designed before an emergency migration is required.
+
+## 🌐 24. Hashing Inside TLS and Secure Protocols
+
+Hash functions appear throughout secure communication protocols.
+
+They can be used in transcript hashing, authentication, key derivation, and message authentication.
+
+TLS 1.3 uses transcript hashes as part of the handshake state.
+
+HKDF is central to TLS 1.3 key schedule construction.
+
+HMAC is used as a primitive inside HKDF.
+
+This demonstrates that hashing is rarely an isolated feature in a modern protocol.
+
+The protocol defines how the hash is composed with keys, labels, and transcript data.
+
+Implementations should therefore use the protocol stack's cryptographic library rather than manually reproducing handshake derivations.
+
+Changing one hash primitive in a protocol can break interoperability.
+
+Cryptographic negotiation must be constrained to supported secure algorithms.
+
+Do not assume that seeing SHA-256 in a protocol means the protocol is simply hashing the message with SHA-256.
+
+Context, labels, keys, and transcript construction are all part of the security design.
+
+Protocol specifications are the authority for these details.
+
+Testing should include interoperability against independent implementations.
+
+Protocol version and cipher-suite documentation should be treated as security-sensitive configuration.
+
+## ⛓️ 25. Hashes in Blockchains
+
+Blockchains use hashes for multiple purposes, not just mining.
+
+Transaction identifiers may be derived from hashes.
+
+Merkle roots can summarize transactions included in a block.
+
+Block headers can include hashes that connect one block to another.
+
+Proof-of-work systems can require finding a hash below a target.
+
+Bitcoin uses SHA-256 extensively in its proof-of-work construction.
+
+Hash-based commitments can make later modification detectable.
+
+A hash does not by itself create consensus.
+
+Consensus rules determine which hashed structures are accepted.
+
+Mining difficulty changes the probability of finding an acceptable proof.
+
+The security of a blockchain depends on the full protocol and economic model.
+
+Never describe a blockchain as secure simply because it uses SHA-256.
+
+Wallets, signatures, networking, consensus, key management, and implementation correctness all matter.
+
+Hash collision resistance is one part of a larger security argument.
+
+Educational experiments should use isolated networks or test environments rather than manipulating production assets.
+
+## 🧬 26. Hash-to-Curve and Modern Cryptographic Protocols
+
+Some cryptographic protocols need to map arbitrary messages to elliptic-curve points.
+
+RFC 9380 standardizes hashing-to-curve procedures.
+
+This is different from simply computing SHA-256(message) and interpreting the bytes as a coordinate.
+
+The mapping must satisfy mathematical and security requirements of the target group.
+
+Hash-to-curve suites specify the underlying hash or XOF, encoding, domain separation, and curve mapping.
+
+Domain separation is mandatory in the RFC-defined encoding framework.
+
+BLS signatures are a prominent application of hashing messages to elliptic-curve groups.
+
+Verifiable random functions and other protocols can use similar techniques.
+
+Implementers should use standardized suites rather than inventing their own map-to-curve procedure.
+
+The correct suite depends on the curve and protocol.
+
+Hashing to a field element and hashing to a curve point are distinct operations.
+
+Uniformity in the target group is an important requirement.
+
+These constructions show how hashing has evolved beyond file checksums and password storage.
+
+Protocol-level cryptography requires mathematical domain knowledge in addition to API knowledge.
+
+Always start from the protocol specification and its test vectors.
+
+## ⚖️ 27. Hashing vs Encryption vs Encoding vs MAC
+
+Hashing maps data to a digest and is not designed for reversible recovery.
+
+Encryption transforms plaintext into ciphertext using a key and is designed for controlled recovery.
+
+Encoding transforms data into another representation without providing confidentiality.
+
+Base64 is encoding, not encryption.
+
+A MAC authenticates data using a secret key.
+
+HMAC is a MAC construction based on a hash function.
+
+A digital signature authenticates data using asymmetric keys.
+
+Password hashing protects stored password verifiers against offline guessing.
+
+A checksum detects many accidental errors but is not designed to resist an active attacker.
+
+CRC32 is useful for error detection but should not replace cryptographic authentication.
+
+Choosing the primitive should start with the security property required.
+
+Confidentiality requires encryption or another confidentiality mechanism.
+
+Integrity against an active attacker requires authentication such as a MAC or signature.
+
+Password verification requires an appropriate password hashing function.
+
+Data fingerprinting may require a general-purpose cryptographic hash.
+
+One primitive cannot safely substitute for every cryptographic requirement.
+
+## 🧠 28. Threat Modeling Hash Usage
+
+Start by identifying what the digest is protecting.
+
+Ask whether the attacker can modify the input.
+
+Ask whether the attacker can modify the digest.
+
+Ask whether the attacker can choose both inputs in a collision attack.
+
+Ask whether the attacker can perform unlimited offline guesses.
+
+Ask whether the attacker can observe timing differences.
+
+Ask whether multiple protocols consume the same derived value.
+
+Ask whether the hash crosses a trust boundary.
+
+Ask whether the digest is public or secret.
+
+Ask whether the digest is used as an identifier.
+
+Ask whether truncation is permitted.
+
+Ask whether future algorithm migration is required.
+
+Ask whether compliance rules constrain the available primitives.
+
+Ask whether the implementation runs on constrained hardware.
+
+Ask whether an attacker can obtain GPU or cloud compute for offline attacks.
+
+These questions convert 'which hash should I use?' into a concrete security-design decision.
+
+## 🚨 29. Common Design Failures
+
+Failure: using SHA-256 directly for passwords.
+
+Correction: use an adaptive password hashing function.
+
+Failure: storing passwords in plaintext.
+
+Correction: store password verifiers generated by a password hashing library.
+
+Failure: using one static salt for every account.
+
+Correction: use a unique salt per password record.
+
+Failure: treating a salt as a secret.
+
+Correction: protect the pepper or other secret separately; salts can be stored with hashes.
+
+Failure: authenticating requests with a plain hash.
+
+Correction: use HMAC or a digital signature as appropriate.
+
+Failure: constructing `hash(secret || message)` manually.
+
+Correction: use HMAC or a protocol-defined authenticated construction.
+
+Failure: hashing ambiguous serialized data.
+
+Correction: define canonical serialization or unambiguous framing.
+
+Failure: trusting an unsigned download hash from the same compromised origin.
+
+Correction: authenticate the digest through a trusted signature, channel, or metadata system.
+
+## 🧯 30. Operational Failure Modes
+
+Cryptography can fail operationally even when the underlying algorithm is sound.
+
+A correct algorithm with an obsolete library can still create security exposure.
+
+Incorrect random-number generation can undermine salts, keys, or tokens.
+
+Secrets in logs can defeat otherwise strong cryptographic protections.
+
+Backups can preserve old password hashes long after a migration.
+
+Database exports can expose password verifiers to attackers.
+
+Debug output can accidentally reveal raw inputs and digests.
+
+Metrics can leak sensitive identifiers if they contain unsanitized cryptographic material.
+
+Configuration drift can cause different servers to use different password-hashing costs.
+
+Time-based comparisons can create side channels in sensitive verification code.
+
+Missing rate limits can make online guessing easier even when password storage is strong.
+
+Broken key rotation can leave compromised authentication keys active.
+
+Dependency upgrades can change accepted algorithm parameters or parsing behavior.
+
+Security monitoring should distinguish authentication failures from infrastructure errors.
+
+Incident response plans should include credential and key rotation procedures.
+
+Operational controls are part of cryptographic security.
+
+## 🐍 31. Python Practical Patterns
+
+Python's standard library provides `hashlib` for several common hash functions.
+
+Use `hashlib.sha256(data).digest()` when raw digest bytes are required.
+
+Use `.hexdigest()` when a textual hexadecimal representation is required.
+
+For large files, use `hashlib` incrementally rather than reading the whole file into memory.
+
+Example: `h = hashlib.sha256()`.
+
+Then repeatedly call `h.update(chunk)`.
+
+Finally call `h.hexdigest()`.
+
+For HMAC, use the standard library `hmac` module.
+
+Use `hmac.compare_digest()` for sensitive equality checks.
+
+Do not use `hashlib.sha256(password.encode()).hexdigest()` for password storage.
+
+For password storage, use a maintained Argon2id, scrypt, bcrypt, or PBKDF2 library according to your requirements.
+
+Use `secrets.token_bytes()` for security-sensitive random values.
+
+Keep byte encoding explicit at application boundaries.
+
+Prefer library APIs over handwritten cryptographic constructions.
+
+Pin and regularly update cryptographic dependencies according to your organization's policy.
+
+## 🟦 32. Node.js Practical Patterns
+
+Node.js exposes cryptographic primitives through the `node:crypto` module.
+
+`createHash('sha256')` creates a SHA-256 hashing stream.
+
+Hash objects support incremental updates for large inputs.
+
+`digest('hex')` produces a hexadecimal representation.
+
+`createHmac()` creates an HMAC instance.
+
+Use `timingSafeEqual()` where appropriate for fixed-length sensitive byte comparisons.
+
+Do not use a generic hash API as a password-storage primitive.
+
+Use a maintained password-hashing package or framework facility designed for Argon2id, scrypt, bcrypt, or PBKDF2.
+
+Random secrets should come from cryptographically secure APIs.
+
+Encoding choices should be explicit and interoperable.
+
+Do not silently convert Unicode strings between encodings.
+
+File hashing should use streams for large files.
+
+Protocol implementations should follow the protocol's specified hash and serialization rules.
+
+Do not expose secret keys in browser bundles.
+
+Review dependency security and native bindings when adding cryptographic packages.
+
+## 🐹 33. Go Practical Patterns
+
+Go's standard library provides packages under `crypto` and `hash` for common primitives.
+
+`crypto/sha256` provides SHA-256 and related helpers.
+
+`crypto/sha512` provides SHA-384 and SHA-512 family functions.
+
+`crypto/hmac` provides HMAC construction.
+
+`crypto/subtle` provides constant-time comparison helpers.
+
+Use `io.Copy()` with a hash writer when hashing large streams.
+
+Do not convert arbitrary binary data to strings unnecessarily.
+
+Keep algorithm selection explicit in security-sensitive code.
+
+Use standard library implementations unless a protocol requires a vetted external implementation.
+
+Password storage should use a maintained Argon2id or other appropriate password hashing implementation.
+
+Random secrets should use `crypto/rand`, not `math/rand`.
+
+Tests should compare against official vectors.
+
+Error handling should not accidentally expose secret values.
+
+Benchmark password hashing on the actual deployment class.
+
+Document the selected cost parameters and upgrade policy.
+
+## 🧱 34. API Design for Hashing Services
+
+An internal hashing service should define exactly what bytes it receives.
+
+Do not make a generic endpoint such as `/hash?value=...` for secrets.
+
+Query parameters can leak sensitive values through logs, proxies, and browser history.
+
+Prefer structured request bodies with explicit content types when a service truly needs to receive data.
+
+Never send plaintext passwords to a generic hashing microservice unless the architecture explicitly requires it and transport is protected.
+
+Password hashing is normally best performed close to the authentication boundary.
+
+File hashing services should enforce input-size and resource limits.
+
+Streaming endpoints should prevent unbounded memory consumption.
+
+Authentication and authorization still apply to cryptographic services.
+
+Rate limits matter when the service performs expensive password hashing.
+
+Do not expose internal cryptographic configuration unnecessarily.
+
+Responses should identify algorithm and parameters when clients need to verify or migrate records.
+
+Version the API if the wire representation changes.
+
+Include negative tests for malformed digests and unsupported algorithms.
+
+Security-sensitive APIs should have an explicit threat model and abuse-case analysis.
+
+## 🔍 35. Code Review Checklist — Hashing
+
+□ Is the chosen primitive appropriate for the security property?
+
+□ Is the algorithm currently supported by authoritative standards or the protocol?
+
+□ Is the digest length appropriate?
+
+□ Is text encoding explicit?
+
+□ Is serialization canonical or unambiguous?
+
+□ Is authentication being confused with integrity-only hashing?
+
+□ Are passwords protected by an adaptive password hashing function?
+
+□ Does each password have a unique salt?
+
+□ Are password parameters stored with the verifier?
+
+□ Is a pepper required, and if so, is it stored separately?
+
+□ Are HMACs verified with a constant-time comparison?
+
+□ Are cryptographic keys and peppers excluded from source control?
+
+□ Are test vectors present?
+
+□ Are empty and multi-block inputs tested?
+
+□ Is there a migration path for algorithm changes?
+
+□ Are deprecated algorithms isolated to legacy compatibility code?
+
+□ Are dependencies maintained?
+
+□ Are logs free of secrets and sensitive plaintext?
+
+□ Are resource limits defined for expensive hashing operations?
+
+□ Does documentation explain the threat model?
+
+## 🧪 36. Laboratory 1 — Verify a SHA-256 Digest
+
+Goal: learn the difference between bytes, hexadecimal text, and a digest.
+
+Create a file containing exactly the bytes you intend to hash.
+
+On Linux, use `sha256sum` in binary-safe workflows.
+
+On macOS, `shasum -a 256` is a common command-line option.
+
+On Windows PowerShell, `Get-FileHash` can calculate SHA-256 for a file.
+
+Compare the digest across two independent implementations.
+
+Change one byte in the file.
+
+Calculate the digest again.
+
+Observe that the complete digest changes.
+
+Restore the original byte.
+
+Verify that the original digest returns.
+
+Repeat with an empty file.
+
+Repeat with a binary file.
+
+Document the exact file bytes and expected digest.
+
+Lesson: reproducibility depends on hashing the same bytes, not merely the same-looking content.
+
+## 🧪 37. Laboratory 2 — Demonstrate Encoding Differences
+
+Goal: understand why text encoding must be explicit.
+
+Choose a non-ASCII string such as a word containing accented characters.
+
+Encode it as UTF-8.
+
+Encode the same logical text using another supported encoding where possible.
+
+Hash each byte sequence separately.
+
+Compare the resulting digests.
+
+They will differ because the byte sequences differ.
+
+Inspect the encoded bytes before hashing.
+
+Repeat after changing Unicode normalization.
+
+Observe that visually similar strings can have different code-point sequences.
+
+Define one canonical encoding for your application.
+
+Add an interoperability test in a second programming language.
+
+Record the exact expected byte sequence.
+
+Record the expected digest.
+
+Lesson: a cryptographic hash cannot repair an underspecified serialization format.
+
+## 🧪 38. Laboratory 3 — Password Hashing Benchmark
+
+Goal: understand why password hashing must be deliberately expensive.
+
+Create a local test account using a password hashing library.
+
+Benchmark verification on the same machine used by the application.
+
+Measure CPU time and memory consumption.
+
+Increase the work factor.
+
+Repeat the benchmark.
+
+Observe the effect on legitimate login latency.
+
+Then consider the same operation from an offline attacker's perspective.
+
+Fast general-purpose hashes allow enormous numbers of guesses.
+
+Memory-hard password hashing increases the attacker's resource requirements.
+
+Do not benchmark using real user passwords.
+
+Do not publish password candidates in source control.
+
+Choose parameters based on the deployment environment and availability requirements.
+
+Store the algorithm and parameters with the password verifier.
+
+Lesson: password hashing is intentionally different from file hashing.
+
+## 🧪 39. Laboratory 4 — HMAC Tamper Detection
+
+Goal: distinguish a plain digest from an authenticated digest.
+
+Generate a random test key with a cryptographically secure random source.
+
+Calculate HMAC-SHA-256 over a test message.
+
+Modify one message byte.
+
+Verify that the original MAC no longer validates.
+
+Try to calculate a valid MAC without the key.
+
+Use a constant-time comparison routine for verification.
+
+Repeat with several message lengths.
+
+Test an empty message.
+
+Test a multi-block message.
+
+Rotate the key and verify that old tags fail under the new key.
+
+Never hard-code the laboratory key in production code.
+
+Document the key lifecycle separately from the message format.
+
+Explain why publishing a plain SHA-256 digest would not prove possession of the secret key.
+
+Lesson: authentication requires a secret or an asymmetric trust mechanism.
+
+## 🧪 40. Laboratory 5 — Merkle Tree Commitment
+
+Goal: build a small educational Merkle tree.
+
+Create four leaf messages.
+
+Hash each leaf with a clearly defined leaf encoding.
+
+Combine adjacent child digests using an unambiguous node encoding.
+
+Hash each pair to create the parent level.
+
+Repeat until one root remains.
+
+Change one leaf.
+
+Recalculate the path to the root.
+
+Observe that the root changes.
+
+Construct an inclusion proof containing the sibling hashes on the path.
+
+Verify the proof without the other leaves.
+
+Document whether the tree uses duplicate-last-leaf or another odd-node rule.
+
+Document leaf and node domain separation.
+
+Compare the root produced by two independent implementations.
+
+Lesson: data structures become cryptographic protocols when their exact encoding affects security.
+
+## 🧪 41. Laboratory 6 — Length-Extension Awareness
+
+Goal: understand why naive secret-prefix authentication is dangerous.
+
+Study the structure of Merkle-Damgard hashes.
+
+Review how SHA-256 maintains an internal chaining state.
+
+Consider a construction of the form H(secret || message).
+
+Understand that the digest exposes the final chaining state.
+
+Study the role of message padding.
+
+Observe why a compatible extension can be constructed in affected designs.
+
+Do not deploy such a construction.
+
+Replace it with HMAC-SHA-256.
+
+Verify that changing the message invalidates the HMAC.
+
+Compare the design to a plain SHA-256 digest.
+
+Read the HMAC specification before implementing any custom MAC.
+
+Treat this laboratory as a protocol-composition lesson.
+
+Never perform security testing against systems you do not own or have authorization to test.
+
+Lesson: a secure primitive can be misused inside an insecure construction.
+
+## 🧪 42. Laboratory 7 — Algorithm Migration Simulation
+
+Goal: practice migrating legacy password verifiers.
+
+Create a local database containing synthetic test accounts.
+
+Mark some records as legacy hashes.
+
+Mark newer records with the current password hashing scheme.
+
+On login, detect the stored algorithm identifier.
+
+Verify the password using the legacy verifier only when required.
+
+After successful verification, generate a new verifier.
+
+Replace the legacy record atomically.
+
+Track how many legacy records remain.
+
+Define a password-reset path for accounts that never log in.
+
+Do not convert a password hash by hashing the hash unless the migration design explicitly justifies it.
+
+Prefer direct re-hashing of the original password after successful authentication.
+
+Document a final retirement date for legacy verification code.
+
+Remove legacy dependencies after the migration is complete.
+
+Lesson: cryptographic agility is a lifecycle capability.
+
+## 🧭 43. Algorithm Selection Decision Guide
+
+Need a standardized general-purpose digest with broad interoperability? Consider SHA-256.
+
+Need a standardized SHA-2 digest on a 64-bit platform? SHA-512-family functions may be appropriate.
+
+Need a standardized alternative construction to SHA-2? Consider SHA-3.
+
+Need variable-length standardized output? Consider SHAKE.
+
+Need password storage? Use a password hashing function such as Argon2id rather than a raw hash.
+
+Need keyed authentication with a shared secret? Consider HMAC.
+
+Need several keys from one high-quality secret? Consider HKDF.
+
+Need content addressing? Use a cryptographic digest with enough collision resistance for the namespace.
+
+Need software authenticity? Combine hashing with signatures or authenticated distribution metadata.
+
+Need accidental corruption detection only? A checksum may be sufficient.
+
+Need confidentiality? Hashing is not the solution; use authenticated encryption or another suitable encryption design.
+
+Need interoperability? Prefer algorithms mandated by the protocol or ecosystem.
+
+Need compliance? Verify the current applicable standard and validated implementation requirements.
+
+Need future migration? Store algorithm identifiers and versioned parameters.
+
+Do not choose an algorithm solely because a benchmark says it is fastest.
+
+## 📚 44. Authoritative Reference Map
+
+NIST FIPS 180-4 defines the Secure Hash Standard and the SHA-2 family.
+
+NIST FIPS 202 defines SHA-3 and the SHAKE extendable-output functions.
+
+NIST's Hash Functions project tracks approved hash algorithms and policy information.
+
+NIST has stated that SHA-1 is being transitioned out of approved use and recommends SHA-2 or SHA-3 for new applications.
+
+RFC 2104 specifies HMAC.
+
+RFC 5869 specifies HKDF.
+
+RFC 8018 specifies PBKDF2 and related password-based cryptography mechanisms.
+
+RFC 9106 specifies Argon2 version 1.3.
+
+RFC 9380 specifies hashing to elliptic curves and associated domain-separation requirements.
+
+OWASP Password Storage Cheat Sheet provides current application guidance for password hashing.
+
+OWASP Cryptographic Storage Cheat Sheet covers broader cryptographic storage decisions.
+
+Python `hashlib` documents standard-library hashing interfaces.
+
+Node.js `crypto` documents hashing, HMAC, and constant-time comparison APIs.
+
+Go's `crypto` packages provide standard cryptographic primitives.
+
+Standards and protocol specifications should take precedence over informal tutorials when requirements conflict.
+
+## 🗓️ 45. Standards Tracking and 2026 Maintenance Notes
+
+This chapter is written for a 2026 learning environment.
+
+NIST FIPS 180-4 is still the published Secure Hash Standard while NIST has announced a revision.
+
+NIST FIPS 202 remains the published SHA-3 standard while NIST has announced an update.
+
+NIST's current policy page states that SHA-1 is being transitioned away from approved use.
+
+Do not freeze this chapter's parameter recommendations indefinitely.
+
+Password-hashing cost parameters should be reviewed as hardware changes.
+
+OWASP updates its cheat sheets as practical guidance evolves.
+
+RFC errata and updates should be checked before implementing a protocol from an older RFC.
+
+Library documentation can change independently of algorithm standards.
+
+Security guidance should record the date it was reviewed.
+
+Production cryptographic decisions should be revisited after significant vulnerabilities, standard changes, or infrastructure changes.
+
+Do not treat a 2026 article as a permanent cryptographic policy.
+
+Keep a cryptographic inventory in mature systems.
+
+Record where each algorithm is used, why it is used, and how it can be migrated.
+
+Security engineering is a lifecycle discipline rather than a one-time algorithm choice.
+
+
+---
+
+# 🧩 46. Practical Review Exercises
+
+## Exercise A — Identify the Primitive
+
+Read each requirement before choosing an algorithm.
+
+- "I need to detect whether a downloaded file changed." → cryptographic hash plus a trusted reference.
+- "I need to store user passwords." → adaptive password hashing.
+- "I need to authenticate an API request between two services with a shared secret." → HMAC or a protocol-defined MAC.
+- "I need to derive several independent keys from a handshake secret." → a KDF such as HKDF.
+- "I need to hide customer data." → encryption, preferably authenticated encryption.
+- "I need to represent binary data in JSON." → encoding such as Base64.
+- "I need to detect accidental network corruption." → an appropriate checksum may be enough.
+- "I need to prove that a package came from a publisher." → signatures or authenticated provenance metadata.
+- "I need a content identifier." → a collision-resistant cryptographic digest with a defined namespace.
+- "I need a password reset token." → a cryptographically secure random token, not a predictable hash of account data.
+
+## Exercise B — Explain the Mistake
+
+Consider:
+
+```python
+stored = sha256(password.encode()).hexdigest()
+```
+
+The code produces a deterministic digest.
+
+The problem is not that SHA-256 is a bad hash.
+
+The problem is that password guessing is an offline computation.
+
+An attacker can calculate SHA-256 extremely quickly.
+
+A fast verifier lets the attacker test many candidate passwords.
+
+A unique salt is also absent.
+
+Therefore identical passwords can produce identical stored values.
+
+A password-hashing function such as Argon2id is designed specifically for this threat.
+
+The correct implementation should use a maintained password-hashing API.
+
+The application should store the complete verifier string returned by the library.
+
+The verifier should contain the algorithm and cost information required for future verification.
+
+## Exercise C — Explain the Trust Boundary
+
+Suppose a website publishes:
+
+```text
+application.zip
+SHA256(application.zip) = abc123...
+```
+
+Ask where the digest came from.
+
+If the same compromised server can replace both files, the attacker can also replace the digest.
+
+A trusted signature changes the model.
+
+A separately authenticated release manifest can also change the model.
+
+An independently obtained digest can provide stronger assurance.
+
+The lesson is not "hashes are useless."
+
+The lesson is "a digest needs an appropriate trust path."
+
+---
+
+# 🧭 47. Final Engineering Checklist
+
+Before approving a hash-related implementation:
+
+- [ ] The security property is explicitly identified.
+- [ ] The selected primitive matches that property.
+- [ ] The algorithm is current for the intended use.
+- [ ] Deprecated algorithms are restricted to justified compatibility paths.
+- [ ] Passwords use an adaptive password-hashing scheme.
+- [ ] Password salts are unique.
+- [ ] Secret peppers, if used, are stored separately.
+- [ ] HMAC is used instead of a homemade keyed hash.
+- [ ] Sensitive comparisons use constant-time primitives where appropriate.
+- [ ] Text encoding is explicit.
+- [ ] Structured data has canonical or unambiguous serialization.
+- [ ] Domain separation is defined for multi-purpose derivations.
+- [ ] Digest truncation is justified and specified.
+- [ ] Test vectors are included.
+- [ ] Empty-input behavior is tested.
+- [ ] Large-input behavior is tested.
+- [ ] Binary data is processed as bytes.
+- [ ] Cryptographic dependencies are maintained.
+- [ ] Secrets are absent from source control.
+- [ ] Secrets are absent from logs.
+- [ ] Error messages do not disclose secret material.
+- [ ] Expensive password verification has resource controls.
+- [ ] Algorithm identifiers are stored when migration requires them.
+- [ ] A future upgrade path exists.
+- [ ] The implementation is reviewed against authoritative standards.
+- [ ] Production decisions are documented with date and rationale.
+
+---
+
+# 🎓 48. What Mastery Looks Like
+
+A beginner can define a hash.
+
+An intermediate engineer can use SHA-256 correctly.
+
+A security engineer can distinguish hashing from authentication.
+
+A backend engineer can design password storage with migration support.
+
+A protocol engineer can reason about encoding, domain separation, and composition.
+
+A cryptography engineer can analyze the security properties of a construction.
+
+An experienced reviewer can identify when a correct primitive is being used incorrectly.
+
+The goal of this chapter is not to memorize algorithm names.
+
+The goal is to develop the habit of asking:
+
+1. What security property do I need?
+2. What attacker am I defending against?
+3. What exact bytes are being processed?
+4. What primitive and construction provide the property?
+5. What standard specifies the construction?
+6. How are secrets generated and stored?
+7. How is the result verified?
+8. How will the design migrate when requirements change?
+
+If those questions are answered precisely, cryptographic engineering becomes much less mysterious.
+
+---
+
+# 📖 49. Source Notes
+
+The primary standards for this chapter are the NIST Secure Hash Standard and SHA-3 Standard.
+
+NIST's Hash Functions project identifies FIPS 180-4 and FIPS 202 as the standards for approved hash algorithms.
+
+NIST's current policy information is especially important for SHA-1 because algorithm status changes over time.
+
+OWASP guidance is used for application-level password storage recommendations.
+
+IETF RFCs are used for HMAC, HKDF, PBKDF2, Argon2, and hash-to-curve protocol details.
+
+Implementation examples are intentionally framed as patterns.
+
+They are not a substitute for the documentation of the exact library version used in production.
+
+Performance numbers are deliberately not treated as universal facts.
+
+Hardware, CPU instructions, compiler settings, language runtime, library implementation, input size, concurrency, and workload all affect performance.
+
+When performance matters, benchmark the exact implementation on representative infrastructure.
+
+When compliance matters, verify the applicable validation and policy requirements rather than relying on a generic algorithm list.
+
+When security matters, prefer standardized constructions and mature implementations.
+
+---
+
+# 🛡️ 50. Responsible Cryptography Practice
+
+Cryptography is defensive technology.
+
+Use these concepts to protect systems, users, software artifacts, and communications.
+
+Do not use this material to attack systems without authorization.
+
+Password-hashing laboratories should use synthetic accounts.
+
+File-integrity laboratories should use files created for testing.
+
+Protocol experiments should use local or explicitly authorized environments.
+
+Do not submit real credentials to demonstration programs.
+
+Do not place production keys in examples.
+
+Do not publish private keys, recovery secrets, peppers, or authentication tokens.
+
+Do not test authentication bypasses against systems you do not own or have permission to assess.
+
+Responsible security engineering combines technical knowledge with authorization, privacy, and operational discipline.
+
+---
+
+# 🔗 51. Curated Reference Links
+
+### Standards
+
+- NIST — Secure Hash Standard (FIPS 180-4): https://csrc.nist.gov/pubs/fips/180-4/upd1/final
+- NIST — SHA-3 Standard (FIPS 202): https://csrc.nist.gov/pubs/fips/202/final
+- NIST — Hash Functions Project: https://csrc.nist.gov/projects/hash-functions
+- NIST — Hash Function Policy: https://csrc.nist.gov/projects/hash-functions/hash-function-policy
+
+### IETF / RFC
+
+- RFC 2104 — HMAC: https://www.rfc-editor.org/rfc/rfc2104
+- RFC 5869 — HKDF: https://www.rfc-editor.org/rfc/rfc5869
+- RFC 8018 — PKCS #5 v2.1 / PBKDF2: https://www.rfc-editor.org/rfc/rfc8018
+- RFC 9106 — Argon2: https://www.rfc-editor.org/rfc/rfc9106
+- RFC 9380 — Hashing to Elliptic Curves: https://www.rfc-editor.org/rfc/rfc9380
+- RFC 7693 — BLAKE2: https://www.rfc-editor.org/rfc/rfc7693
+
+### Application Security
+
+- OWASP Password Storage Cheat Sheet: https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html
+- OWASP Cryptographic Storage Cheat Sheet: https://cheatsheetseries.owasp.org/cheatsheets/Cryptographic_Storage_Cheat_Sheet.html
+- OWASP ASVS: https://owasp.org/www-project-application-security-verification-standard/
+
+### Developer Documentation
+
+- Python hashlib: https://docs.python.org/3/library/hashlib.html
+- Python hmac: https://docs.python.org/3/library/hmac.html
+- Node.js crypto: https://nodejs.org/api/crypto.html
+- Go crypto packages: https://pkg.go.dev/crypto
+
+---
+
+# ✅ 52. Completion Checklist for the Reader
+
+After finishing the article, verify that you can answer all of these without looking them up:
+
+- What is a cryptographic hash?
+- What is a digest?
+- Why must fixed-length hashes have collisions?
+- What is preimage resistance?
+- What is second-preimage resistance?
+- What is collision resistance?
+- Why is the birthday bound approximately 2^(n/2)?
+- Why is SHA-256 not a password hashing algorithm?
+- What is a salt?
+- Does a salt need to be secret?
+- What is a pepper?
+- Where should a pepper be stored?
+- What is HMAC?
+- Why is HMAC preferable to a homemade secret-prefix hash?
+- What is HKDF?
+- What is domain separation?
+- What is canonicalization?
+- What is a length-extension attack?
+- What is a Merkle tree?
+- What is content addressing?
+- Why does a published hash not automatically prove authenticity?
+- Why do digital signatures commonly involve hashing?
+- What are SHA-2 and SHA-3?
+- What is SHAKE?
+- What is the difference between a hash and an XOF?
+- What is Argon2id?
+- When might PBKDF2 be selected?
+- Why does password-hashing cost need periodic review?
+- Why are test vectors important?
+- Why should production cryptography use mature libraries?
+- Why is cryptographic agility an engineering requirement?
+- Why must algorithm choice be tied to a threat model?
+
+If you can answer these questions and explain the reasoning behind each answer, you have moved beyond memorizing terminology and into practical cryptographic engineering.
+
+---
+
+## 🔐 Closing Principle
+
+> **Do not ask only, "Which hash is strongest?" Ask, "What security property does this system require, what attacker can challenge it, and which standardized construction provides that property safely?"**
+
+That question is the foundation of sound hash-function engineering.
+
+---
+
+*Maintained as part of [DevSec-Archive](https://github.com/ItsWanheda/DevSec-Archive) by [ItsWanheda](https://github.com/ItsWanheda).*  
+*Educational material should be reviewed against current NIST, IETF, OWASP, and library documentation before production use.*
