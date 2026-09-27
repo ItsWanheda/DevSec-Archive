@@ -56,6 +56,8 @@ The archive explores how to design, implement, secure, test, and operate backend
 Foundations and architectural patterns for building modern server-side applications.
 
 * [HTTP Fundamentals](Backend%20Engineering/HTTP%20Fundamentals/README.md) — comprehensive protocol and backend foundation
+* [Clean Architecture](Backend%20Engineering/Clean%20Architecture/README.md) — production-oriented architecture and dependency design
+* [Database Transactions](Backend%20Engineering/Database%20transactions/database-transactions.md) — transactions, isolation, concurrency, and consistency
 * REST API Design
 * GraphQL
 * WebSockets
@@ -69,7 +71,6 @@ Foundations and architectural patterns for building modern server-side applicati
 * Microservices
 * API Gateways
 * Backend Design Patterns
-* Clean Architecture
 * Domain-Driven Design (DDD)
 
 ---
@@ -81,18 +82,18 @@ Security concepts for protecting applications, APIs, infrastructure, and sensiti
 * Web Application Security
 * Authentication Security
 * API Security
-* OWASP Top 10
+* [OWASP Top 10](Cybersecurity/Owasp%20top%2010/README.md)
 * OWASP API Security Top 10
-* Cryptography
+* [Cryptography → Hash Functions](Cryptography/Hash%20Functions/README.md)
 * Password Security
-* JWT Security
-* OAuth 2.0 & OpenID Connect
+* [JWT Security](Cybersecurity/JSON-Web-Token/readme.md)
+* [OAuth 2.0 & OpenID Connect](Cybersecurity/OAuth%202.0%20and%20OIDC/README.md)
 * Secure Coding Practices
 * Security Headers
 * CORS
 * CSRF
 * XSS
-* SQL Injection
+* [SQL Injection](Cybersecurity/SQL%20Injection/README.md)
 * SSRF
 * Command Injection
 * File Upload Security
@@ -106,9 +107,9 @@ Security concepts for protecting applications, APIs, infrastructure, and sensiti
 
 The protocols and infrastructure that connect modern applications.
 
-* Computer Networks
+* [Computer Networks](Networking/Computer%20Networks/README.md)
 * OSI Model
-* TCP/IP
+* [TCP/IP Protocol Suite](Networking/TCP-IP%20Protocol%20Suite/README.md)
 * HTTP / HTTPS
 * DNS
 * TLS / SSL
@@ -136,7 +137,7 @@ Database fundamentals, performance, architecture, and security.
 * MongoDB
 * Redis
 * Database Indexing
-* Transactions
+* [Transactions](Backend%20Engineering/Database%20transactions/database-transactions.md)
 * ACID
 * Isolation Levels
 * Query Optimization
@@ -150,7 +151,7 @@ Database fundamentals, performance, architecture, and security.
 
 Core cryptographic concepts used throughout secure systems.
 
-* Hash Functions
+* [Hash Functions](Cryptography/Hash%20Functions/README.md)
 * Password Hashing
 * Digital Signatures
 * Public Key Infrastructure (PKI)
@@ -186,6 +187,8 @@ Practical checklists and engineering guidance for production systems.
 * Monitoring & Observability
 * Incident Response
 
+> 🚧 Best-practice articles are being expanded alongside the main technical curriculum.
+
 ---
 
 ### 📚 Reference
@@ -207,6 +210,19 @@ A curated collection of useful technical resources.
 ## 🧭 Learning Path
 
 The archive is designed to support a progression from fundamentals to advanced system security.
+
+### 🌱 Recommended Starting Sequence
+
+1. [Computer Networks](Networking/Computer%20Networks/README.md)
+2. [TCP/IP Protocol Suite](Networking/TCP-IP%20Protocol%20Suite/README.md)
+3. [HTTP Fundamentals](Backend%20Engineering/HTTP%20Fundamentals/README.md)
+4. [Database Transactions](Backend%20Engineering/Database%20transactions/database-transactions.md)
+5. [Clean Architecture](Backend%20Engineering/Clean%20Architecture/README.md)
+6. [OWASP Top 10](Cybersecurity/Owasp%20top%2010/README.md)
+7. [SQL Injection](Cybersecurity/SQL%20Injection/README.md)
+8. [JSON Web Token](Cybersecurity/JSON-Web-Token/readme.md)
+9. [OAuth 2.0 & OpenID Connect](Cybersecurity/OAuth%202.0%20and%20OIDC/README.md)
+10. [Hash Functions](Cryptography/Hash%20Functions/README.md)
 
 ```text
 Networking
@@ -237,6 +253,59 @@ Databases      API Design
             ▼
       DevSecOps / Zero Trust
 ```
+
+
+
+---
+
+## 🗂️ Published Article Index
+
+> **Every link below points to an educational article that currently exists in the repository.**
+>
+> Topics without a link remain part of the planned curriculum and are not presented as completed material.
+
+### ⚙️ Backend Engineering
+
+| Article | Coverage |
+| --- | --- |
+| [HTTP Fundamentals](Backend%20Engineering/HTTP%20Fundamentals/README.md) | HTTP protocol, semantics, messages, state, caching, security, and backend foundations |
+| [Clean Architecture](Backend%20Engineering/Clean%20Architecture/README.md) | Architecture boundaries, dependency direction, domain design, testing, and production structure |
+| [Database Transactions](Backend%20Engineering/Database%20transactions/database-transactions.md) | Transactions, ACID, isolation, concurrency, locking, and database consistency |
+
+### 🛡️ Cybersecurity
+
+| Article | Coverage |
+| --- | --- |
+| [OWASP Top 10](Cybersecurity/Owasp%20top%2010/README.md) | Major web application risks, root causes, defensive controls, and security engineering |
+| [JSON Web Token](Cybersecurity/JSON-Web-Token/readme.md) | JWT structure, authentication, authorization, lifecycle, refresh flows, and security pitfalls |
+| [OAuth 2.0 & OpenID Connect](Cybersecurity/OAuth%202.0%20and%20OIDC/README.md) | Authorization, identity, PKCE, SSO, flows, threats, and secure identity architecture |
+| [SQL Injection](Cybersecurity/SQL%20Injection/README.md) | Injection mechanics, parameterized queries, mitigation, database security, and secure development |
+
+### 🌐 Networking
+
+| Article | Coverage |
+| --- | --- |
+| [Computer Networks](Networking/Computer%20Networks/README.md) | Networking foundations, OSI/TCP-IP, switching, routing, DNS, enterprise networks, SDN, VPN, and infrastructure |
+| [TCP/IP Protocol Suite](Networking/TCP-IP%20Protocol%20Suite/README.md) | TCP/IP architecture, transport, addressing, routing, and protocol-level reasoning |
+
+### 🔐 Cryptography
+
+| Article | Coverage |
+| --- | --- |
+| [Hash Functions](Cryptography/Hash%20Functions/README.md) | Hash properties, SHA-2, SHA-3, SHAKE, HMAC, HKDF, password hashing, Merkle trees, signatures, and cryptographic engineering |
+
+### 🎨 Web Design
+
+| Article | Coverage |
+| --- | --- |
+| [CSS Mastery](Web%20Design/CSS%20Mastery/README.md) | CSS fundamentals, layout, responsive design, modern CSS, and maintainable UI engineering |
+
+### 📄 Repository Documentation
+
+- [Contributing Guide](CONTRIBUTING.md)
+- [Security Policy](SECURITY.md)
+- [Code of Conduct](CODE_OF_CONDUCT.md)
+- [MIT License](LICENSE)
 
 ---
 
