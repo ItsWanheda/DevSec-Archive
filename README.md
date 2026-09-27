@@ -276,7 +276,7 @@ Databases      API Design
 
 | Article | Coverage |
 | --- | --- |
-| [OWASP Top 10](Cybersecurity/Owasp%20top%2010/README.md) | Major web application risks, root causes, defensive controls, and security engineering |
+| [OWASP API Security Top 10](Cybersecurity/OWASP%20API%20Security%20Top%2010/README.md) | API-specific authorization, authentication, resource consumption, business-flow abuse, SSRF, configuration, inventory, third-party integrations, testing, and defensive engineering |\n| [OWASP Top 10](Cybersecurity/Owasp%20top%2010/README.md) | Major web application risks, root causes, defensive controls, and security engineering |
 | [JSON Web Token](Cybersecurity/JSON-Web-Token/readme.md) | JWT structure, authentication, authorization, lifecycle, refresh flows, and security pitfalls |
 | [OAuth 2.0 & OpenID Connect](Cybersecurity/OAuth%202.0%20and%20OIDC/README.md) | Authorization, identity, PKCE, SSO, flows, threats, and secure identity architecture |
 | [SQL Injection](Cybersecurity/SQL%20Injection/README.md) | Injection mechanics, parameterized queries, mitigation, database security, and secure development |
