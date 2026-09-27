@@ -83,7 +83,7 @@ Security concepts for protecting applications, APIs, infrastructure, and sensiti
 * Authentication Security
 * API Security
 * [OWASP Top 10](Cybersecurity/Owasp%20top%2010/README.md)
-* OWASP API Security Top 10
+* [OWASP API Security Top 10](Cybersecurity/OWASP%20API%20Security%20Top%2010/README.md)
 * [Cryptography → Hash Functions](Cryptography/Hash%20Functions/README.md)
 * Password Security
 * [JWT Security](Cybersecurity/JSON-Web-Token/readme.md)
@@ -219,10 +219,11 @@ The archive is designed to support a progression from fundamentals to advanced s
 4. [Database Transactions](Backend%20Engineering/Database%20transactions/database-transactions.md)
 5. [Clean Architecture](Backend%20Engineering/Clean%20Architecture/README.md)
 6. [OWASP Top 10](Cybersecurity/Owasp%20top%2010/README.md)
-7. [SQL Injection](Cybersecurity/SQL%20Injection/README.md)
-8. [JSON Web Token](Cybersecurity/JSON-Web-Token/readme.md)
-9. [OAuth 2.0 & OpenID Connect](Cybersecurity/OAuth%202.0%20and%20OIDC/README.md)
-10. [Hash Functions](Cryptography/Hash%20Functions/README.md)
+7. [OWASP API Security Top 10](Cybersecurity/OWASP%20API%20Security%20Top%2010/README.md)
+8. [SQL Injection](Cybersecurity/SQL%20Injection/README.md)
+9. [JSON Web Token](Cybersecurity/JSON-Web-Token/readme.md)
+10. [OAuth 2.0 & OpenID Connect](Cybersecurity/OAuth%202.0%20and%20OIDC/README.md)
+11. [Hash Functions](Cryptography/Hash%20Functions/README.md)
 
 ```text
 Networking
